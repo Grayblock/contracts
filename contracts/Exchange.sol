@@ -587,7 +587,7 @@ library Address {
  * functions have been added to mitigate the well-known issues around setting
  * allowances. See {IBEP20-approve}.
  */
-abstract contract BEP20 is Context, IBEP20, Ownable {
+ contract BEP20 is Context, IBEP20, Ownable {
     using SafeMath for uint256;
     using Address for address;
 
@@ -899,8 +899,13 @@ contract GrayblockPool is BEP20{
         _;
     }
 
-function getAmountsOut(uint256 input_amount, uint256 input_reserve, uint256 output_reserve) public pure returns (uint256) {
-    
+function getAmountsOut(uint256 input_amount, address _tokenFrom,address _tokenTo) public view returns (uint256) {
+    IBEP20 tokenFrom=IBEP20(_tokenFrom);
+    IBEP20 tokenTo=IBEP20(_tokenTo);
+    uint256 tokenA_reserve = tokenFrom.balanceOf(address(this));
+    uint256 tokenB_reserve = tokenTo.balanceOf(address(this));
+    return price(input_amount,tokenA_reserve,tokenB_reserve);
+
 }
 
 function price(uint256 input_amount, uint256 input_reserve, uint256 output_reserve) public pure returns (uint256) {
