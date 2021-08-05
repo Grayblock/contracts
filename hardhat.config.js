@@ -35,10 +35,8 @@ module.exports = {
       accounts:{
         accountsBalance:"100000000000000000000000000000000",
       },
-      forking:{
-        url: url,
-   
-      },
+      gasPrice: 260000,
+      gasLimit: 100000000000000000
     },
     BSCtestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
@@ -61,13 +59,34 @@ module.exports = {
     },
   },
   solidity: {
-    version: "0.8.0",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200
+    compilers: [
+      {
+        version: "0.5.16",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
+      },
+      {
+        version: "0.6.6",
+        settings: {   
+          optimizer: {
+          enabled: true,
+          runs: 1000,
+        },},
+      },
+      {
+        version: "0.8.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
       }
-    }
+    ],
   },
   paths: {
     sources: "./contracts",
