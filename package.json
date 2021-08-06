@@ -13,6 +13,7 @@
     "node-cron": "^3.0.0"
   },
   "dependencies": {
+    "@uniswap/lib": "",
     "abi-decoder": "^2.4.0",
     "csv": "^5.5.0",
     "dataframe-js": "^1.4.4",
