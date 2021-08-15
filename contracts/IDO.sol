@@ -16,11 +16,10 @@ contract IDO is Ownable {
     uint ratio;
     uint cap;
     bool sale;
-    address owner;
+
     constructor(address _projectToken,address _tradeToken) {
          projectToken=ERC20(_projectToken);
          tradeToken=ERC20(_tradeToken);
-         owner=msg.sender;
          cap=0;
          sale=false;
     }
