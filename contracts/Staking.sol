@@ -648,6 +648,8 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
     mapping(address => uint256) private _startTime;  
     uint DELAY=86400;
     uint MINIMUMTIME=0;
+    uint FEE=10;
+    address feeOwner=0x8d76B11F924CaD777ad789f7629b20EEe67C8b8e;
     /* ========== CONSTRUCTOR ========== */
 
     constructor(
@@ -672,6 +674,12 @@ function getDelay() external view returns (uint256) {
 function getMinimumTime() external view returns (uint256) {
         return MINIMUMTIME;
     }
+function getFee() external view returns (uint256) {
+        return FEE;
+    }
+function getfeeOwner() external view returns (address) {
+        return feeOwner;
+    }
     function lastTimeRewardApplicable() public override view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
     }
@@ -691,9 +699,13 @@ function getMinimumTime() external view returns (uint256) {
 
     function stake(uint256 amount) external override nonReentrant notPaused updateReward(msg.sender) {
         require(amount > 0, 'Cannot stake 0');
+        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+        uint newAmount=FEE.div(1000);
+        newAmount=newAmount.mul(amount);
+        amount=amount-newAmount;
+        stakingToken.safeTransferFrom(address(this),feeOwner, newAmount);
         totalSupply = totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
-        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
         _startTime[msg.sender]=block.timestamp;
         emit Staked(msg.sender, amount);
     }
@@ -736,6 +748,15 @@ function getMinimumTime() external view returns (uint256) {
     function setMinimumTime(uint _minimumTime) external onlyOwner returns (uint256) {
         MINIMUMTIME=_minimumTime;
         return MINIMUMTIME;
+    }
+
+        function setFee(uint _fee) external onlyOwner returns (uint256) {
+        FEE=_fee;
+        return FEE;
+    }
+        function setfeeOwner(address _feeOwner) external onlyOwner returns (address) {
+        feeOwner=_feeOwner;
+        return feeOwner;
     }
     /* ========== RESTRICTED FUNCTIONS ========== */
 
