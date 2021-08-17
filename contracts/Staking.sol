@@ -645,7 +645,9 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
     mapping(address => uint256) private userRewardPerTokenPaid;
     mapping(address => uint256) private rewards;
     mapping(address => uint256) private _balances;
-
+    mapping(address => uint256) private _startTime;  
+    uint DELAY=86400;
+    uint MINIMUMTIME=0;
     /* ========== CONSTRUCTOR ========== */
 
     constructor(
@@ -663,6 +665,13 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
         return _balances[account];
     }
 
+function getDelay() external view returns (uint256) {
+        return DELAY;
+    }
+
+function getMinimumTime() external view returns (uint256) {
+        return MINIMUMTIME;
+    }
     function lastTimeRewardApplicable() public override view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
     }
@@ -685,11 +694,16 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
         totalSupply = totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+        _startTime[msg.sender]=block.timestamp;
         emit Staked(msg.sender, amount);
     }
 
     function withdraw(uint256 amount) public override nonReentrant updateReward(msg.sender) {
         require(amount > 0, 'Cannot withdraw 0');
+        if(MINIMUMTIME>0){
+            uint time=block.timestamp-_startTime[msg.sender];
+           require(time > MINIMUMTIME, 'Need to wait minimum time before withdraw'); 
+        }
         totalSupply = totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
         stakingToken.safeTransfer(msg.sender, amount);
@@ -698,6 +712,10 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
 
     function getReward() public override nonReentrant updateReward(msg.sender) {
         uint256 reward = rewards[msg.sender];
+        if(DELAY>0){
+            uint time=block.timestamp-_startTime[msg.sender];
+           require(time > DELAY, 'Need to wait before getting rewards'); 
+        }
         if (reward > 0) {
             rewards[msg.sender] = 0;
             rewardsToken.safeTransfer(msg.sender, reward);
@@ -710,6 +728,15 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
         getReward();
     }
 
+    function setDelay(uint _delay) external onlyOwner returns (uint256) {
+        DELAY=_delay;
+        return DELAY;
+    }
+
+    function setMinimumTime(uint _minimumTime) external onlyOwner returns (uint256) {
+        MINIMUMTIME=_minimumTime;
+        return MINIMUMTIME;
+    }
     /* ========== RESTRICTED FUNCTIONS ========== */
 
     function notifyRewardAmount(uint256 reward) external onlyOwner updateReward(address(0)) {
@@ -739,7 +766,7 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
         require(block.timestamp > periodFinish, 'Previous rewards period must be complete before changing the reward rate');
         rewardRate = rewardsPerInterval.div(interval);
 
-        RewardRateUpdated(rewardsPerInterval, interval, rewardRate);
+       emit RewardRateUpdated(rewardsPerInterval, interval, rewardRate);
     }
 
     /* ========== MODIFIERS ========== */
@@ -753,6 +780,7 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
         }
         _;
     }
+    
 
     /* ========== EVENTS ========== */
 
