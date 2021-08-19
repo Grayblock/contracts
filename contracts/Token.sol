@@ -10,8 +10,14 @@ contract Token is ERC20PresetMinterPauser {
     address owner;
     constructor() ERC20PresetMinterPauser("Project1","GVE"){
         owner=msg.sender;
-        uint256 initialSupply = 900000 * 10 ** decimals();
-        
+        //real supply:
+
+        //uint256 initialSupply = 900000 * 10 ** decimals();
+
+        //test supply:
+
+        uint256 initialSupply = 900000;
+
         _mint(_msgSender(), initialSupply);
     }
 

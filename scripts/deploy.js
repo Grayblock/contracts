@@ -6,7 +6,8 @@
 const hre = require("hardhat");
 const owner="";
 const rewardsAddress="";
-
+const projectToken=""
+const tradedToken=""
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -25,6 +26,11 @@ async function main() {
   const staking = await Staking.deploy(owner,rewardsAddress,token.address);
   await staking.deployed();
   console.log("Staking contract deployed to:", staking.address);
+
+  const Ido = await hre.ethers.getContractFactory("IDO");
+  const ido = await Ido.deploy(projectToken,tradedToken);
+  await ido.deployed();
+  console.log("IDO contract deployed to:", ido.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
