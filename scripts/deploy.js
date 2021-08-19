@@ -17,11 +17,18 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+
+
   const Token = await hre.ethers.getContractFactory("Token");
   const token = await Token.deploy();
   await token.deployed();
   console.log("Token deployed to:", token.address);
 
+  const Token2 = await hre.ethers.getContractFactory("Token");
+  const token2 = await Token2.deploy();
+  await token2.deployed();
+  console.log("Token2 deployed to:", token2.address);
+  
   const Staking = await hre.ethers.getContractFactory("GrayblockStaking");
   const staking = await Staking.deploy(owner,rewardsAddress,token.address);
   await staking.deployed();
