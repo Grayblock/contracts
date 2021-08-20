@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
+    "@truffle/hdwallet-provider": "^1.4.3",
     "@uniswap/lib": "",
     "abi-decoder": "^2.4.0",
     "csv": "^5.5.0",

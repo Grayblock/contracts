@@ -4,10 +4,7 @@
 // When running the script with `hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
-const owner="";
-const rewardsAddress="";
-const projectToken=""
-const tradedToken=""
+
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -18,7 +15,8 @@ async function main() {
 
   // We get the contract to deploy
 
-
+  console.log("deploying contracts");
+  const accounts = await ethers.getSigners();
   const Token = await hre.ethers.getContractFactory("Token");
   const token = await Token.deploy();
   await token.deployed();
@@ -28,7 +26,10 @@ async function main() {
   const token2 = await Token2.deploy();
   await token2.deployed();
   console.log("Token2 deployed to:", token2.address);
-  
+  const owner=accounts[0].address;
+  const rewardsAddress=token2.address;
+  const projectToken=token.address
+  const tradedToken=token2.address
   const Staking = await hre.ethers.getContractFactory("GrayblockStaking");
   const staking = await Staking.deploy(owner,rewardsAddress,token.address);
   await staking.deployed();
@@ -48,3 +49,4 @@ main()
     console.error(error);
     process.exit(1);
   });
+

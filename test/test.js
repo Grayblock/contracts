@@ -39,7 +39,9 @@ describe("Grayblock", function() {
     const staking = await Staking.deploy(owner,rewardsAddress,token.address);
     await staking.deployed();
     console.log("Staking contract deployed to:", staking.address);
-    
+    await staking.setRewardRate(1000,10,{from:accounts[0].address});
+ 
+
     projectToken=token.address;
     tradedToken=rewardsAddress;
     const Ido = await hre.ethers.getContractFactory("IDO");
@@ -72,14 +74,21 @@ describe("Grayblock", function() {
     await token2.transfer(staking.address,8000,{from:accounts[0].address});
     balance=await token2.balanceOf(staking.address)
     console.log("Staking balance of traded token after transfer is : ",balance.toNumber())
+    await staking.notifyRewardAmount(8000,{from:accounts[0].address});
     await token.transfer(accounts[1].address,8000,{from:accounts[0].address});
-    balance=await token.balanceOf(accounts[1].address)
-    console.log("account 1 balance of project token after transfer is : ",balance.toNumber())
-    staking.connect(accounts[1]).stake(1000,{from:accounts[1].address})
-    balance=await token2.balanceOf(staking.address)
-    console.log("Staking balance of project token after transfer is : ",balance.toNumber())
-
-
+    balance=await token.balanceOf(accounts[1].address);
+    console.log("account 1 balance of project token after before is : ",balance.toNumber())
+    balance=await token.balanceOf(staking.address)
+    console.log("Staking balance of project token before staking is : ",balance.toNumber())
+    await token.connect(accounts[1]).approve(staking.address,1000,{from:accounts[1].address});
+    await staking.connect(accounts[1]).stake(1000,{from:accounts[1].address})
+    balance=await token.balanceOf(accounts[1].address);
+    console.log("account 1 balance of project token after staking is : ",balance.toNumber())
+    balance=await token.balanceOf(staking.address)
+    console.log("Staking balance of project token after staking is : ",balance.toNumber())
+    await staking.connect(accounts[1]).withdraw(900,{from:accounts[1].address})
+    balance=await token.balanceOf(staking.address)
+    console.log("Staking balance of project token after withdraw is : ",balance.toNumber())
   });
 
  

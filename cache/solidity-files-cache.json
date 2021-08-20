@@ -111,8 +111,8 @@
       ]
     },
     "/Users/yonatanmartsiano/Downloads/Smart-contracts/contracts/Staking.sol": {
-      "lastModificationDate": 1629204546530,
-      "contentHash": "51579dcf87f12c63dcf6fe7e7681c78a",
+      "lastModificationDate": 1629434488484,
+      "contentHash": "3527b2446fadefd05c39270a73a8298a",
       "sourceName": "contracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -136,7 +136,9 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "hardhat/console.sol"
+      ],
       "versionPragmas": [
         "^0.8.0"
       ],
@@ -1015,40 +1017,6 @@
         "IPancakeMigrator"
       ]
     },
-    "/Users/yonatanmartsiano/node_modules/@uniswap/lib/contracts/libraries/TransferHelper.sol": {
-      "lastModificationDate": 1606389451391,
-      "contentHash": "217eebcde87d40a3d470ac72f50c6aba",
-      "sourceName": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
-      "solcConfig": {
-        "version": "0.8.0",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0"
-      ],
-      "artifacts": [
-        "TransferHelper"
-      ]
-    },
     "/Users/yonatanmartsiano/Downloads/Smart-contracts/contracts/core/interfaces/IPancakePair.sol": {
       "lastModificationDate": 1628002025346,
       "contentHash": "9e4cd97338e60177d23a4cc784d24c3e",
@@ -1117,40 +1085,6 @@
       ],
       "artifacts": [
         "PancakeOracleLibrary"
-      ]
-    },
-    "/Users/yonatanmartsiano/node_modules/@uniswap/lib/contracts/libraries/FixedPoint.sol": {
-      "lastModificationDate": 1606389451390,
-      "contentHash": "dc596f83d7c5841f61b8c8b244ff59e9",
-      "sourceName": "@uniswap/lib/contracts/libraries/FixedPoint.sol",
-      "solcConfig": {
-        "version": "0.8.0",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.0"
-      ],
-      "artifacts": [
-        "FixedPoint"
       ]
     },
     "/Users/yonatanmartsiano/Downloads/Smart-contracts/contracts/core/interfaces/IPancakeERC20.sol": {
@@ -1765,6 +1699,40 @@
       ],
       "artifacts": [
         "Pausable"
+      ]
+    },
+    "/Users/yonatanmartsiano/Downloads/Smart-contracts/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1627313425207,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     }
   }

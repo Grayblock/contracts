@@ -1,6 +1,7 @@
 
 
 pragma solidity ^0.8.0;
+import "hardhat/console.sol";
 
 
 /**
@@ -783,10 +784,13 @@ function getfeeOwner() external view returns (address) {
     }
 
     function setRewardRate(uint256 rewardsPerInterval, uint256 interval) external onlyOwner {
+
         require(rewardsPerInterval > 0 && interval > 0, 'rewardsPerInterval and interval should be greater than 0');
+        console.log("reward interval is set to",rewardsPerInterval);
+
         require(block.timestamp > periodFinish, 'Previous rewards period must be complete before changing the reward rate');
         rewardRate = rewardsPerInterval.div(interval);
-
+        console.log("reward rate is:" ,rewardRate );
        emit RewardRateUpdated(rewardsPerInterval, interval, rewardRate);
     }
 
