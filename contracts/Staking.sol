@@ -681,6 +681,9 @@ function getFee() external view returns (uint256) {
 function getfeeOwner() external view returns (address) {
         return feeOwner;
     }
+function getRewardRate() external view returns (uint) {
+        return rewardRate;
+    }
     function lastTimeRewardApplicable() public override view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
     }

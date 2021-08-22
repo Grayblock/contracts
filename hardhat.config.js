@@ -111,6 +111,9 @@ task("accounts", "Prints the list of accounts", async () => {
       gasPrice: 5000000000 // 5 gwei
     }
   },
+  "scripts": {
+    "test": "mocha"
+  }
 };
 
 

@@ -111,8 +111,8 @@
       ]
     },
     "/Users/yonatanmartsiano/Downloads/Smart-contracts/contracts/Staking.sol": {
-      "lastModificationDate": 1629434488484,
-      "contentHash": "3527b2446fadefd05c39270a73a8298a",
+      "lastModificationDate": 1629650359152,
+      "contentHash": "15c3b91daeb39a8b28e6568c0b8f6828",
       "sourceName": "contracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.0",
