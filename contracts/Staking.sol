@@ -540,7 +540,7 @@ interface IStaking {
 
     // Mutative
 
-    function stake(uint256 amount) external;
+    function stake(uint256 amount) external returns (uint);
 
     function withdraw(uint256 amount) external;
 
@@ -639,7 +639,7 @@ contract GrayblockStaking is IStaking, ReentrancyGuard, Pausable {
     uint256 public rewardPerTokenStored;
     uint256 public lastBalance;
     uint256 public totalSupply;
-
+    uint256 public LastFee;
     IERC20 public rewardsToken;
     IERC20 public stakingToken;
 
@@ -675,6 +675,10 @@ function getDelay() external view returns (uint256) {
 function getMinimumTime() external view returns (uint256) {
         return MINIMUMTIME;
     }
+
+function getLastFee() external view returns (uint256) {
+        return LastFee;
+    }
 function getFee() external view returns (uint256) {
         return FEE;
     }
@@ -701,17 +705,20 @@ function getRewardRate() external view returns (uint) {
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    function stake(uint256 amount) external override nonReentrant notPaused updateReward(msg.sender) {
+    function stake(uint256 amount) external nonReentrant notPaused updateReward(msg.sender) override returns (uint) {
         require(amount > 0, 'Cannot stake 0');
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
-        uint newAmount=FEE.div(1000);
-        newAmount=newAmount.mul(amount);
+        uint newAmount=FEE.mul(amount).div(1000);
+        console.log("Fee",newAmount);
         amount=amount-newAmount;
-        stakingToken.safeTransferFrom(address(this),feeOwner, newAmount);
+        LastFee=newAmount;
+        console.log("amount",amount);
+        stakingToken.safeTransfer(feeOwner, newAmount);
         totalSupply = totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         _startTime[msg.sender]=block.timestamp;
         emit Staked(msg.sender, amount);
+        return newAmount;
     }
 
     function withdraw(uint256 amount) public override nonReentrant updateReward(msg.sender) {

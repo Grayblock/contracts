@@ -5,6 +5,2264 @@
       "Address": {
         "src": "contracts/Staking.sol:268",
         "version": {
+          "withMetadata": "4c93a81e7333021368d7d8e890fe1bb7d3674e0a4f46c9835b34516075ab9e3e",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "GrayblockStaking": {
+        "src": "contracts/Staking.sol:629",
+        "version": {
+          "withMetadata": "daaaa6d6043741a52ffbec1170e262c3cad711158a4941592b0b05d1d39dfbf9",
+          "withoutMetadata": "d78a0bcf22d7307371d3e285d40658a8aaec0d66a2da547a9fa574dd382a2736",
+          "linkedWithoutMetadata": "d78a0bcf22d7307371d3e285d40658a8aaec0d66a2da547a9fa574dd382a2736"
+        },
+        "inherit": [
+          "Pausable",
+          "Owned",
+          "ReentrancyGuard",
+          "IStaking"
+        ],
+        "libraries": [
+          "SafeMath",
+          "SafeERC20",
+          "Math",
+          "console"
+        ],
+        "methods": [
+          "(address,address,address)",
+          "balanceOf(address)",
+          "getDelay()",
+          "getMinimumTime()",
+          "getLastFee()",
+          "getFee()",
+          "getfeeOwner()",
+          "getRewardRate()",
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()",
+          "setDelay(uint256)",
+          "setMinimumTime(uint256)",
+          "setFee(uint256)",
+          "setfeeOwner(address)",
+          "notifyRewardAmount(uint256)",
+          "setRewardRate(uint256,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GrayblockStaking",
+            "src": "contracts/Staking.sol:656"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "DELAY",
+            "src": "contracts/Staking.sol:650"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "MINIMUMTIME",
+            "src": "contracts/Staking.sol:651"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "FEE",
+            "src": "contracts/Staking.sol:652"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "feeOwner",
+            "src": "contracts/Staking.sol:653"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GrayblockStaking",
+              "label": "periodFinish",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:635"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardRate",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:636"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsDuration",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:637"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastUpdateTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:638"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardPerTokenStored",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:639"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastBalance",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:640"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "totalSupply",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:641"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "LastFee",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:642"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:643"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "stakingToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:644"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "userRewardPerTokenPaid",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:646"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewards",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:647"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:648"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_startTime",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:649"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "DELAY",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:650"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "MINIMUMTIME",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:651"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "FEE",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:652"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "feeOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:653"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IERC20)343": {
+              "label": "contract IERC20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "contracts/Staking.sol:194",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IStaking": {
+        "src": "contracts/Staking.sol:531",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "balanceOf(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Math": {
+        "src": "contracts/Staking.sol:10",
+        "version": {
+          "withMetadata": "5145eac218c997b712d952cc96d42bb3bae7134f8baddee356245e20e6803b87",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Owned": {
+        "src": "contracts/Staking.sol:552",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "nominateNewOwner(address)",
+          "acceptOwnership()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Owned",
+            "src": "contracts/Staking.sol:556"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Owned",
+              "label": "owner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:553"
+            },
+            {
+              "contract": "Owned",
+              "label": "nominatedOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:554"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Pausable": {
+        "src": "contracts/Staking.sol:588",
+        "version": {
+          "withMetadata": "dee3464d0c8101172e554ca73547538f1e77ac4bbd099806e01defae6d78d3d9",
+          "withoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5",
+          "linkedWithoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5"
+        },
+        "inherit": [
+          "Owned"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address)",
+          "setPaused(bool)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Pausable",
+            "src": "contracts/Staking.sol:592"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Pausable",
+              "label": "lastPauseTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:589"
+            },
+            {
+              "contract": "Pausable",
+              "label": "paused",
+              "type": "t_bool",
+              "src": "contracts/Staking.sol:590"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ReentrancyGuard": {
+        "src": "contracts/Staking.sol:488",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ReentrancyGuard",
+            "src": "contracts/Staking.sol:505"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ReentrancyGuard",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:503"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeERC20": {
+        "src": "contracts/Staking.sol:412",
+        "version": {
+          "withMetadata": "d58ed97ec7f2f3b9c42ed84ea8d47bb6d88c0d252e4635a6351403a15a38cffa",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [
+          "SafeMath",
+          "Address"
+        ],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeMath": {
+        "src": "contracts/Staking.sol:48",
+        "version": {
+          "withMetadata": "1c99426abfe2392d3dab690d783dae40f9e772208f67857e0c66741de1b4d2ea",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "console": {
+        "src": "hardhat/console.sol:4",
+        "version": {
+          "withMetadata": "22ab50c6385aa6d0c318a53d16e43dfb9bf847a5e8844a576dff317fc6f7afeb",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "Address": {
+        "src": "contracts/Staking.sol:268",
+        "version": {
+          "withMetadata": "c6ece1ebe3930793df1809f6ac1818e05d3b05e759e9766ac0e01d36455d2362",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "GrayblockStaking": {
+        "src": "contracts/Staking.sol:629",
+        "version": {
+          "withMetadata": "785951aefcde8f3b1e3ec42d8a41e02015e4b3834d3c4f768a66b9858151cfac",
+          "withoutMetadata": "fe16128dab8b08fa9d15bca46c4d0f3e693da8d3c915869f413f000c3a6708b0",
+          "linkedWithoutMetadata": "fe16128dab8b08fa9d15bca46c4d0f3e693da8d3c915869f413f000c3a6708b0"
+        },
+        "inherit": [
+          "Pausable",
+          "Owned",
+          "ReentrancyGuard",
+          "IStaking"
+        ],
+        "libraries": [
+          "SafeMath",
+          "SafeERC20",
+          "Math",
+          "console"
+        ],
+        "methods": [
+          "(address,address,address)",
+          "balanceOf(address)",
+          "getDelay()",
+          "getMinimumTime()",
+          "getLastFee()",
+          "getFee()",
+          "getfeeOwner()",
+          "getRewardRate()",
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()",
+          "setDelay(uint256)",
+          "setMinimumTime(uint256)",
+          "setFee(uint256)",
+          "setfeeOwner(address)",
+          "notifyRewardAmount(uint256)",
+          "setRewardRate(uint256,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GrayblockStaking",
+            "src": "contracts/Staking.sol:656"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "DELAY",
+            "src": "contracts/Staking.sol:650"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "MINIMUMTIME",
+            "src": "contracts/Staking.sol:651"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "FEE",
+            "src": "contracts/Staking.sol:652"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "feeOwner",
+            "src": "contracts/Staking.sol:653"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GrayblockStaking",
+              "label": "periodFinish",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:635"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardRate",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:636"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsDuration",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:637"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastUpdateTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:638"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardPerTokenStored",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:639"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastBalance",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:640"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "totalSupply",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:641"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "LastFee",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:642"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:643"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "stakingToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:644"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "userRewardPerTokenPaid",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:646"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewards",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:647"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:648"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_startTime",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:649"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "DELAY",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:650"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "MINIMUMTIME",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:651"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "FEE",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:652"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "feeOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:653"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IERC20)343": {
+              "label": "contract IERC20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "contracts/Staking.sol:194",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IStaking": {
+        "src": "contracts/Staking.sol:531",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "balanceOf(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Math": {
+        "src": "contracts/Staking.sol:10",
+        "version": {
+          "withMetadata": "c0f9859a5b4b3eec81201f520bcc722530fd79b118ad63589d89c4b9daa0e6bc",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Owned": {
+        "src": "contracts/Staking.sol:552",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "nominateNewOwner(address)",
+          "acceptOwnership()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Owned",
+            "src": "contracts/Staking.sol:556"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Owned",
+              "label": "owner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:553"
+            },
+            {
+              "contract": "Owned",
+              "label": "nominatedOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:554"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Pausable": {
+        "src": "contracts/Staking.sol:588",
+        "version": {
+          "withMetadata": "729102a084ef079229b3d939850261dc8d87a8fd5d2159726e51d45c3dc9791b",
+          "withoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5",
+          "linkedWithoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5"
+        },
+        "inherit": [
+          "Owned"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address)",
+          "setPaused(bool)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Pausable",
+            "src": "contracts/Staking.sol:592"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Pausable",
+              "label": "lastPauseTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:589"
+            },
+            {
+              "contract": "Pausable",
+              "label": "paused",
+              "type": "t_bool",
+              "src": "contracts/Staking.sol:590"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ReentrancyGuard": {
+        "src": "contracts/Staking.sol:488",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ReentrancyGuard",
+            "src": "contracts/Staking.sol:505"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ReentrancyGuard",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:503"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeERC20": {
+        "src": "contracts/Staking.sol:412",
+        "version": {
+          "withMetadata": "620f3905b251eb8def21ee1f6376282a23fc71f155b07e7516355ab769d7080f",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [
+          "SafeMath",
+          "Address"
+        ],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeMath": {
+        "src": "contracts/Staking.sol:48",
+        "version": {
+          "withMetadata": "55efdc607c9fb82e03904cd4a4d7f53f69ee5a955edfa6c7fb9767b5f4d7cb09",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "console": {
+        "src": "hardhat/console.sol:4",
+        "version": {
+          "withMetadata": "22ab50c6385aa6d0c318a53d16e43dfb9bf847a5e8844a576dff317fc6f7afeb",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "Address": {
+        "src": "contracts/Staking.sol:268",
+        "version": {
+          "withMetadata": "10449a7f60cfe9a226a77b375ada768930f604f006353bf65c355b03034a0fcb",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "GrayblockStaking": {
+        "src": "contracts/Staking.sol:629",
+        "version": {
+          "withMetadata": "ffa883f5b140b1ddf227a3c2d9626915c22e3d75d77bcef318f938ffe8de9129",
+          "withoutMetadata": "11166043fd5e3a7eea26f60de997f82124f4a60f3a147e1e82554fead78fa5de",
+          "linkedWithoutMetadata": "11166043fd5e3a7eea26f60de997f82124f4a60f3a147e1e82554fead78fa5de"
+        },
+        "inherit": [
+          "Pausable",
+          "Owned",
+          "ReentrancyGuard",
+          "IStaking"
+        ],
+        "libraries": [
+          "SafeMath",
+          "SafeERC20",
+          "Math",
+          "console"
+        ],
+        "methods": [
+          "(address,address,address)",
+          "balanceOf(address)",
+          "getDelay()",
+          "getMinimumTime()",
+          "getLastFee()",
+          "getFee()",
+          "getfeeOwner()",
+          "getRewardRate()",
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()",
+          "setDelay(uint256)",
+          "setMinimumTime(uint256)",
+          "setFee(uint256)",
+          "setfeeOwner(address)",
+          "notifyRewardAmount(uint256)",
+          "setRewardRate(uint256,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GrayblockStaking",
+            "src": "contracts/Staking.sol:656"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "DELAY",
+            "src": "contracts/Staking.sol:650"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "MINIMUMTIME",
+            "src": "contracts/Staking.sol:651"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "FEE",
+            "src": "contracts/Staking.sol:652"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "feeOwner",
+            "src": "contracts/Staking.sol:653"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GrayblockStaking",
+              "label": "periodFinish",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:635"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardRate",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:636"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsDuration",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:637"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastUpdateTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:638"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardPerTokenStored",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:639"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastBalance",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:640"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "totalSupply",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:641"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "LastFee",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:642"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:643"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "stakingToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:644"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "userRewardPerTokenPaid",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:646"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewards",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:647"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:648"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_startTime",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:649"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "DELAY",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:650"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "MINIMUMTIME",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:651"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "FEE",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:652"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "feeOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:653"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IERC20)343": {
+              "label": "contract IERC20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "contracts/Staking.sol:194",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IStaking": {
+        "src": "contracts/Staking.sol:531",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "balanceOf(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Math": {
+        "src": "contracts/Staking.sol:10",
+        "version": {
+          "withMetadata": "fa58f2162fc9af1a7a07379478fc333f185747605b42350ac6166c40a28803ae",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Owned": {
+        "src": "contracts/Staking.sol:552",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "nominateNewOwner(address)",
+          "acceptOwnership()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Owned",
+            "src": "contracts/Staking.sol:556"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Owned",
+              "label": "owner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:553"
+            },
+            {
+              "contract": "Owned",
+              "label": "nominatedOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:554"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Pausable": {
+        "src": "contracts/Staking.sol:588",
+        "version": {
+          "withMetadata": "29b3c014ff5142bba14ada8a4399214f91f283b2f3b6d17be010f2959d96f1b2",
+          "withoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5",
+          "linkedWithoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5"
+        },
+        "inherit": [
+          "Owned"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address)",
+          "setPaused(bool)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Pausable",
+            "src": "contracts/Staking.sol:592"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Pausable",
+              "label": "lastPauseTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:589"
+            },
+            {
+              "contract": "Pausable",
+              "label": "paused",
+              "type": "t_bool",
+              "src": "contracts/Staking.sol:590"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ReentrancyGuard": {
+        "src": "contracts/Staking.sol:488",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ReentrancyGuard",
+            "src": "contracts/Staking.sol:505"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ReentrancyGuard",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:503"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeERC20": {
+        "src": "contracts/Staking.sol:412",
+        "version": {
+          "withMetadata": "94684d1b84c671d28846c4041d9d8b674c723b2121e8d160dbaef6b2a96f85ce",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [
+          "SafeMath",
+          "Address"
+        ],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeMath": {
+        "src": "contracts/Staking.sol:48",
+        "version": {
+          "withMetadata": "f0cc46900b50403c54bd32529528b21c0f5bc175495bede27e291e2d109b8829",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "console": {
+        "src": "hardhat/console.sol:4",
+        "version": {
+          "withMetadata": "22ab50c6385aa6d0c318a53d16e43dfb9bf847a5e8844a576dff317fc6f7afeb",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "Address": {
+        "src": "contracts/Staking.sol:268",
+        "version": {
+          "withMetadata": "085d187056acf79e5d7e8d1a9e2b3627e684c64da8d860598057c25a2ada67fc",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "GrayblockStaking": {
+        "src": "contracts/Staking.sol:629",
+        "version": {
+          "withMetadata": "d478ebbbf48f028e661311cff07d29bb578b74efa6f44b5d5494f0317665d96e",
+          "withoutMetadata": "a50acbc3807f3c956fb7f6315e89d85368c7111a614143e8c60bcd4686e34879",
+          "linkedWithoutMetadata": "a50acbc3807f3c956fb7f6315e89d85368c7111a614143e8c60bcd4686e34879"
+        },
+        "inherit": [
+          "Pausable",
+          "Owned",
+          "ReentrancyGuard",
+          "IStaking"
+        ],
+        "libraries": [
+          "SafeMath",
+          "SafeERC20",
+          "Math",
+          "console"
+        ],
+        "methods": [
+          "(address,address,address)",
+          "balanceOf(address)",
+          "getDelay()",
+          "getMinimumTime()",
+          "getLastFee()",
+          "getFee()",
+          "getfeeOwner()",
+          "getRewardRate()",
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()",
+          "setDelay(uint256)",
+          "setMinimumTime(uint256)",
+          "setFee(uint256)",
+          "setfeeOwner(address)",
+          "notifyRewardAmount(uint256)",
+          "setRewardRate(uint256,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GrayblockStaking",
+            "src": "contracts/Staking.sol:656"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "DELAY",
+            "src": "contracts/Staking.sol:650"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "MINIMUMTIME",
+            "src": "contracts/Staking.sol:651"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "FEE",
+            "src": "contracts/Staking.sol:652"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "feeOwner",
+            "src": "contracts/Staking.sol:653"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GrayblockStaking",
+              "label": "periodFinish",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:635"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardRate",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:636"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsDuration",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:637"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastUpdateTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:638"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardPerTokenStored",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:639"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastBalance",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:640"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "totalSupply",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:641"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "LastFee",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:642"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:643"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "stakingToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:644"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "userRewardPerTokenPaid",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:646"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewards",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:647"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:648"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_startTime",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:649"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "DELAY",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:650"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "MINIMUMTIME",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:651"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "FEE",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:652"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "feeOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:653"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IERC20)343": {
+              "label": "contract IERC20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "contracts/Staking.sol:194",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IStaking": {
+        "src": "contracts/Staking.sol:531",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "balanceOf(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Math": {
+        "src": "contracts/Staking.sol:10",
+        "version": {
+          "withMetadata": "a4b8e039a07524e66ac4c26a9cd86bcb73582e15a49b04eb049986efbc924213",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Owned": {
+        "src": "contracts/Staking.sol:552",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "nominateNewOwner(address)",
+          "acceptOwnership()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Owned",
+            "src": "contracts/Staking.sol:556"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Owned",
+              "label": "owner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:553"
+            },
+            {
+              "contract": "Owned",
+              "label": "nominatedOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:554"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Pausable": {
+        "src": "contracts/Staking.sol:588",
+        "version": {
+          "withMetadata": "14526f210c652655f03d2fcd942f6017fdc3dfb0728680fac43888647089e437",
+          "withoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5",
+          "linkedWithoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5"
+        },
+        "inherit": [
+          "Owned"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address)",
+          "setPaused(bool)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Pausable",
+            "src": "contracts/Staking.sol:592"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Pausable",
+              "label": "lastPauseTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:589"
+            },
+            {
+              "contract": "Pausable",
+              "label": "paused",
+              "type": "t_bool",
+              "src": "contracts/Staking.sol:590"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ReentrancyGuard": {
+        "src": "contracts/Staking.sol:488",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ReentrancyGuard",
+            "src": "contracts/Staking.sol:505"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ReentrancyGuard",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:503"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeERC20": {
+        "src": "contracts/Staking.sol:412",
+        "version": {
+          "withMetadata": "dfb72e417b0985549eb1ebf5b635f5414f73a84bf72ea67a1a2fb02788311bfd",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [
+          "SafeMath",
+          "Address"
+        ],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeMath": {
+        "src": "contracts/Staking.sol:48",
+        "version": {
+          "withMetadata": "bce0d616b61b2bd90682f41483b45499ddaefa91e7f150650fbc59db1d806249",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "console": {
+        "src": "hardhat/console.sol:4",
+        "version": {
+          "withMetadata": "22ab50c6385aa6d0c318a53d16e43dfb9bf847a5e8844a576dff317fc6f7afeb",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "Address": {
+        "src": "contracts/Staking.sol:268",
+        "version": {
+          "withMetadata": "26ade09d9c63042c86443f4a9e26143a97248e62f3ed54eb040b8afdc30ca671",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "GrayblockStaking": {
+        "src": "contracts/Staking.sol:629",
+        "version": {
+          "withMetadata": "0184f093c1fae7760ed295fbe063ac6b415485a0413951000a12c508a223288b",
+          "withoutMetadata": "e00e87012bd74caf1e97a8129052cfacd7b93bd7b16a5f999a85b1d3a2011c0b",
+          "linkedWithoutMetadata": "e00e87012bd74caf1e97a8129052cfacd7b93bd7b16a5f999a85b1d3a2011c0b"
+        },
+        "inherit": [
+          "Pausable",
+          "Owned",
+          "ReentrancyGuard",
+          "IStaking"
+        ],
+        "libraries": [
+          "SafeMath",
+          "SafeERC20",
+          "Math",
+          "console"
+        ],
+        "methods": [
+          "(address,address,address)",
+          "balanceOf(address)",
+          "getDelay()",
+          "getMinimumTime()",
+          "getFee()",
+          "getfeeOwner()",
+          "getRewardRate()",
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()",
+          "setDelay(uint256)",
+          "setMinimumTime(uint256)",
+          "setFee(uint256)",
+          "setfeeOwner(address)",
+          "notifyRewardAmount(uint256)",
+          "setRewardRate(uint256,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GrayblockStaking",
+            "src": "contracts/Staking.sol:656"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "DELAY",
+            "src": "contracts/Staking.sol:650"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "MINIMUMTIME",
+            "src": "contracts/Staking.sol:651"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "FEE",
+            "src": "contracts/Staking.sol:652"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "feeOwner",
+            "src": "contracts/Staking.sol:653"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GrayblockStaking",
+              "label": "periodFinish",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:635"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardRate",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:636"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsDuration",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:637"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastUpdateTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:638"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardPerTokenStored",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:639"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "lastBalance",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:640"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "totalSupply",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:641"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewardsToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:643"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "stakingToken",
+              "type": "t_contract(IERC20)343",
+              "src": "contracts/Staking.sol:644"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "userRewardPerTokenPaid",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:646"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "rewards",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:647"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:648"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "_startTime",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Staking.sol:649"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "DELAY",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:650"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "MINIMUMTIME",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:651"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "FEE",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:652"
+            },
+            {
+              "contract": "GrayblockStaking",
+              "label": "feeOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:653"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IERC20)343": {
+              "label": "contract IERC20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "contracts/Staking.sol:194",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IStaking": {
+        "src": "contracts/Staking.sol:531",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "lastTimeRewardApplicable()",
+          "rewardPerToken()",
+          "earned(address)",
+          "balanceOf(address)",
+          "stake(uint256)",
+          "withdraw(uint256)",
+          "getReward()",
+          "exit()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Math": {
+        "src": "contracts/Staking.sol:10",
+        "version": {
+          "withMetadata": "b0419d88a2815579eaea7ef3bf6ec95165d4284ddb541feb33843f6009c86f07",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Owned": {
+        "src": "contracts/Staking.sol:552",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "nominateNewOwner(address)",
+          "acceptOwnership()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Owned",
+            "src": "contracts/Staking.sol:556"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Owned",
+              "label": "owner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:553"
+            },
+            {
+              "contract": "Owned",
+              "label": "nominatedOwner",
+              "type": "t_address",
+              "src": "contracts/Staking.sol:554"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Pausable": {
+        "src": "contracts/Staking.sol:588",
+        "version": {
+          "withMetadata": "3d4f3fe82b161580cf33174891c8e688d8b675290e5ea8d71bcda8ffbdf25541",
+          "withoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5",
+          "linkedWithoutMetadata": "cdad3bc14fe5abc83583e12dedf675d4bec7fa645d28b1f570bba0e595d882f5"
+        },
+        "inherit": [
+          "Owned"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address)",
+          "setPaused(bool)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Pausable",
+            "src": "contracts/Staking.sol:592"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Pausable",
+              "label": "lastPauseTime",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:589"
+            },
+            {
+              "contract": "Pausable",
+              "label": "paused",
+              "type": "t_bool",
+              "src": "contracts/Staking.sol:590"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ReentrancyGuard": {
+        "src": "contracts/Staking.sol:488",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ReentrancyGuard",
+            "src": "contracts/Staking.sol:505"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ReentrancyGuard",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "contracts/Staking.sol:503"
+            }
+          ],
+          "types": {
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeERC20": {
+        "src": "contracts/Staking.sol:412",
+        "version": {
+          "withMetadata": "4bf7230549be1cf58860422a9a2b73e0a12d42d7a36c410bb3e26b4e52d3e27a",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [
+          "SafeMath",
+          "Address"
+        ],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "SafeMath": {
+        "src": "contracts/Staking.sol:48",
+        "version": {
+          "withMetadata": "ca4b54efe31034eae113619f864e4153bd40d9e0d351e3b8f1d6a96b42415f97",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "console": {
+        "src": "hardhat/console.sol:4",
+        "version": {
+          "withMetadata": "22ab50c6385aa6d0c318a53d16e43dfb9bf847a5e8844a576dff317fc6f7afeb",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "Address": {
+        "src": "contracts/Staking.sol:268",
+        "version": {
           "withMetadata": "29db9aef6721c091851c968cfe04386f268c59bb339e2e2a6d21cffba3c569dd",
           "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
           "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"

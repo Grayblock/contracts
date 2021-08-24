@@ -138,23 +138,25 @@ describe("Grayblock", function() {
   console.log("account 1 balance of project token after before is : ",balance.toNumber())
   expect(balance.toNumber()).to.equal(8000); 
 
-   //test staking
+   //test staking + that fee is 1%
   balance=await token.balanceOf(staking.address)
   console.log("Staking balance of project token before staking is : ",balance.toNumber())
   await token.connect(accounts[1]).approve(staking.address,1000,{from:accounts[1].address});
   await staking.connect(accounts[1]).stake(1000,{from:accounts[1].address})
+  let fee= await staking.getLastFee();
+  expect(fee).to.equal(10); 
   balance=await token.balanceOf(accounts[1].address);
   console.log("account 1 balance of project token after staking is : ",balance.toNumber())
   expect(balance.toNumber()).to.equal(7000); 
     //test balance of contract after staking
   balance=await token.balanceOf(staking.address)
   console.log("Staking balance of project token after staking is : ",balance.toNumber())
-  expect(balance.toNumber()).to.equal(1000); 
+  expect(balance.toNumber()).to.equal(990); 
   //test withdraw
   await staking.connect(accounts[1]).withdraw(900,{from:accounts[1].address})
   balance=await token.balanceOf(staking.address)
   console.log("Staking balance of project token after withdraw is : ",balance.toNumber())
-  expect(balance.toNumber()).to.equal(100); 
+  expect(balance.toNumber()).to.equal(90); 
 
   //test failed withdraw
   await staking.setMinimumTime(10,{from:accounts[0].address});
