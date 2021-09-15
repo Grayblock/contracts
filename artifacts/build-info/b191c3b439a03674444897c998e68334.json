@@ -1,0 +1,102 @@
+{
+  "id": "b191c3b439a03674444897c998e68334",
+  "_format": "hh-sol-build-info-1",
+  "solcVersion": "0.5.16",
+  "solcLongVersion": "0.5.16+commit.9c3226ce",
+  "input": {
+    "language": "Solidity",
+    "sources": {
+      "contracts/IDO_basedon_Openzeppelin/mocks/ERC165/ERC165NotSupported.sol": {
+        "content": "pragma solidity ^0.5.0;\r\n\r\ncontract ERC165NotSupported {\r\n    // solhint-disable-previous-line no-empty-blocks\r\n}\r\n"
+      }
+    },
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 1000
+      },
+      "outputSelection": {
+        "*": {
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers"
+          ],
+          "": [
+            "ast"
+          ]
+        }
+      }
+    }
+  },
+  "output": {
+    "contracts": {
+      "contracts/IDO_basedon_Openzeppelin/mocks/ERC165/ERC165NotSupported.sol": {
+        "ERC165NotSupported": {
+          "abi": [],
+          "evm": {
+            "bytecode": {
+              "linkReferences": {},
+              "object": "6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a723158209e707227a7bfc8d57a94a2da5272e3254b71e132b6e53386daf344d7cca82ddf64736f6c63430005100032",
+              "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x3E DUP1 PUSH1 0x1D PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 SWAP15 PUSH17 0x7227A7BFC8D57A94A2DA5272E3254B71E1 ORIGIN 0xB6 0xE5 CALLER DUP7 0xDA RETURN DIFFICULTY 0xD7 0xCC 0xA8 0x2D 0xDF PUSH5 0x736F6C6343 STOP SDIV LT STOP ORIGIN ",
+              "sourceMap": "27:86:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;27:86:0;;;;;;;"
+            },
+            "deployedBytecode": {
+              "linkReferences": {},
+              "object": "6080604052600080fdfea265627a7a723158209e707227a7bfc8d57a94a2da5272e3254b71e132b6e53386daf344d7cca82ddf64736f6c63430005100032",
+              "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 SWAP15 PUSH17 0x7227A7BFC8D57A94A2DA5272E3254B71E1 ORIGIN 0xB6 0xE5 CALLER DUP7 0xDA RETURN DIFFICULTY 0xD7 0xCC 0xA8 0x2D 0xDF PUSH5 0x736F6C6343 STOP SDIV LT STOP ORIGIN ",
+              "sourceMap": "27:86:0:-;;;;;"
+            },
+            "methodIdentifiers": {}
+          }
+        }
+      }
+    },
+    "sources": {
+      "contracts/IDO_basedon_Openzeppelin/mocks/ERC165/ERC165NotSupported.sol": {
+        "ast": {
+          "absolutePath": "contracts/IDO_basedon_Openzeppelin/mocks/ERC165/ERC165NotSupported.sol",
+          "exportedSymbols": {
+            "ERC165NotSupported": [
+              2
+            ]
+          },
+          "id": 3,
+          "nodeType": "SourceUnit",
+          "nodes": [
+            {
+              "id": 1,
+              "literals": [
+                "solidity",
+                "^",
+                "0.5",
+                ".0"
+              ],
+              "nodeType": "PragmaDirective",
+              "src": "0:23:0"
+            },
+            {
+              "baseContracts": [],
+              "contractDependencies": [],
+              "contractKind": "contract",
+              "documentation": null,
+              "fullyImplemented": true,
+              "id": 2,
+              "linearizedBaseContracts": [
+                2
+              ],
+              "name": "ERC165NotSupported",
+              "nodeType": "ContractDefinition",
+              "nodes": [],
+              "scope": 3,
+              "src": "27:86:0"
+            }
+          ],
+          "src": "0:115:0"
+        },
+        "id": 0
+      }
+    }
+  }
+}
