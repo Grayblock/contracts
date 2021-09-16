@@ -157,15 +157,14 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
      */
     function updateAllocation() external onlyOwner {
         uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
-        uint256 _totalProjectTokenBalance = totalProjectTokenBalance;
 
         for(uint256 i = 0; i < stakeInfos.size(); i++) {
             address key = stakeInfos.getKeyAtIndex(i);
             IterableMapping.StakeInfo storage stakeInfo =  stakeInfos.values[key];
-            stakeInfo.rewardAmount = tradedTokenBalance.mul(stakeInfo.amount).div(_totalProjectTokenBalance);
+            stakeInfo.rewardAmount = tradedTokenBalance.mul(stakeInfo.amount).div(totalProjectTokenBalance);
         }
 
-        totalProjectTokenBalance.sub(_totalProjectTokenBalance);
+        totalProjectTokenBalance = 0;
         
         emit AllocationUpdated();
     }

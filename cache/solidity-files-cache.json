@@ -7322,8 +7322,8 @@
       ]
     },
     "D:\\Workspace\\GrayBlock\\Smart-contracts\\contracts\\Staking.sol": {
-      "lastModificationDate": 1631713486229,
-      "contentHash": "b1054c032b5ace09e876c464b6d7f37b",
+      "lastModificationDate": 1631793954449,
+      "contentHash": "5758cff666b807b92b2846242d4194d7",
       "sourceName": "contracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.0",
