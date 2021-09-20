@@ -1,22 +1,28 @@
 {
-  "name": "pool",
+  "name": "hardhat-project",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "remixd": "remixd -s ./ --remix-ide http://remix.ethereum.org",
-    "flatten": "truffle-flattener contracts/markets/OpenMarketplace.sol > flattened/OpenMarketplace.sol"
+    "remixd": "remixd -s ./ --remix-ide http://remix.ethereum.org"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@openzeppelin/test-helpers": "^0.5.13",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.4.6",
+    "hardhat": "^2.6.4",
+    "web3": "^1.5.2"
+  },
   "dependencies": {
     "@openzeppelin/contracts": "^3.0.2",
-    "@remix-project/remixd": "^0.5.1",
-    "@truffle/hdwallet-provider": "^1.5.0",
-    "chai": "^4.3.4",
-    "openzeppelin-solidity": "^1.12.0",
-    "truffle-assertions": "^0.9.2",
-    "truffle-flattener": "^1.5.0"
+    "@remix-project/remixd": "^0.5.2"
   }
 }

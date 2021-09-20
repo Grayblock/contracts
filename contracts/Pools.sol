@@ -91,10 +91,10 @@ contract Pools is Ownable {
         uint256 _StartingTime, //Until what time the pool will work
         uint256 _goal,
         uint256 _cap
-    ) public onlyOwner {
-        require(_goal <= _TotalTokenAmount);
-        require(_cap <= _goal);
-        require(projectToken.balanceOf(msg.sender) >= _TotalTokenAmount);
+    ) external onlyOwner {
+        require(_goal <= _TotalTokenAmount, "Goal cannot be more than TotalTokenAmount");
+        require(_cap <= _goal, "Cap per user cannot be more than goal");
+        require(projectToken.balanceOf(msg.sender) >= _TotalTokenAmount, "ERC20: Balance is less than the total amount");
 
         TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
         PoolStartTime = _StartingTime;
