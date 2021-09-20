@@ -98,7 +98,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             "insufficient balance"
         );
 
-        uint256 _actualAmount = _amount.mul(feeBps.add(10000)).div(10000);
+        uint256 _actualAmount = _amount.mul(uint256(10000).sub(feeBps)).div(10000);
         projectToken.transferFrom(msg.sender, feeCollector, _actualAmount.sub(_amount));
         projectToken.transferFrom(msg.sender, address(this), _actualAmount);
 
