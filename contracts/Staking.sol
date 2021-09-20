@@ -51,9 +51,6 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /// @notice Staking tokens should be locked during locktime in staking pool
     uint256 public lockTime = 1 days;
 
-    /// @dev Total balance of project token
-    uint256 totalProjectTokenBalance;
-
     /// @dev Iterable Mapping for staking information
     IterableMapping.Map stakeInfos;
 
@@ -118,8 +115,6 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             stakeInfos.add(msg.sender, stakeInfo);
         }
 
-        totalProjectTokenBalance.add(_actualAmount);
-
         emit Staked(msg.sender, _amount);
     }
 
@@ -145,8 +140,6 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             stakeInfo.amount = stakeInfo.amount.sub(_amount);
         }
 
-        totalProjectTokenBalance.sub(_amount);
-
         projectToken.transferFrom(address(this), msg.sender, _amount);
 
         emit UnStaked(msg.sender, _amount);
@@ -155,16 +148,20 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Our Backend calls this function every 6hrs to calcuate the reward for every user
      */
-    function updateAllocation() external onlyOwner {
+    function updateAllocation(uint256 rewardAmount) external onlyOwner {
         uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
+        uint256 projectTokenBalance = tradedToken.balanceOf(address(this));
+
+        require(
+            tradedTokenBalance >= rewardAmount,
+            "not enough reward"
+        );
 
         for(uint256 i = 0; i < stakeInfos.size(); i++) {
             address key = stakeInfos.getKeyAtIndex(i);
             IterableMapping.StakeInfo storage stakeInfo =  stakeInfos.values[key];
-            stakeInfo.rewardAmount = tradedTokenBalance.mul(stakeInfo.amount).div(totalProjectTokenBalance);
+            stakeInfo.rewardAmount = rewardAmount.mul(stakeInfo.amount).div(projectTokenBalance);
         }
-
-        totalProjectTokenBalance = 0;
         
         emit AllocationUpdated();
     }
