@@ -5,7 +5,7 @@ describe("Staking", function() {
     let GrayblockStakingContract, ProjectTokenContract, TradedTokenContract, accounts;
 
     before(async function () {
-        const accounts = await ethers.getSigners();
+        const accounts = await hre.ethers.getSigners();
 
         const ProjectToken = await hre.ethers.getContractFactory("Token");
         ProjectTokenContract = await ProjectToken.deploy();
@@ -25,9 +25,9 @@ describe("Staking", function() {
             }
         );
 
-        console.log(GrayblockStaking);
+        //console.log(GrayblockStaking);
 
-        GrayblockStakingContract = await GrayblockStaking.deploy(TradedTokenContract.address, ProjectToken.address, accounts[0].address);
+        GrayblockStakingContract = await GrayblockStaking.deploy(TradedTokenContract.address, ProjectTokenContract.address, accounts[0].address);
     })
 
     it("staking is working", async () => {
