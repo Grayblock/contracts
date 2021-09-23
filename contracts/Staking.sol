@@ -54,6 +54,9 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /// @dev Iterable Mapping for staking information
     IterableMapping.Map stakeInfos;
 
+    /// @notice Total staked project token balance
+    uint256 public totalStakedBalance;
+
     /**
      * @notice Constructor
      * @param _tradedToken Traded Token Instance
@@ -99,11 +102,11 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         );
 
         uint256 _actualAmount = _amount.mul(uint256(10000).sub(feeBps)).div(10000);
-        projectToken.transferFrom(msg.sender, feeCollector, _actualAmount.sub(_amount));
+        projectToken.transferFrom(msg.sender, feeCollector, _amount.sub(_actualAmount));
         projectToken.transferFrom(msg.sender, address(this), _actualAmount);
 
         if(stakeInfos.inserted[msg.sender]) {
-            stakeInfos.values[msg.sender].amount.add(_actualAmount);
+            stakeInfos.values[msg.sender].amount = stakeInfos.values[msg.sender].amount.add(_actualAmount);
             stakeInfos.values[msg.sender].stakedTime = _getNow();
         } else {
             IterableMapping.StakeInfo memory stakeInfo = IterableMapping.StakeInfo({
@@ -115,7 +118,9 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             stakeInfos.add(msg.sender, stakeInfo);
         }
 
-        emit Staked(msg.sender, _amount);
+        totalStakedBalance = totalStakedBalance.add(_actualAmount);
+
+        emit Staked(msg.sender, _actualAmount);
     }
 
     /**
@@ -140,7 +145,9 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             stakeInfo.amount = stakeInfo.amount.sub(_amount);
         }
 
-        projectToken.transferFrom(address(this), msg.sender, _amount);
+        totalStakedBalance = totalStakedBalance.sub(_amount);
+
+        projectToken.transfer(msg.sender, _amount);
 
         emit UnStaked(msg.sender, _amount);
     }
@@ -150,7 +157,6 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
      */
     function updateAllocation(uint256 rewardAmount) external onlyOwner {
         uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
-        uint256 projectTokenBalance = tradedToken.balanceOf(address(this));
 
         require(
             tradedTokenBalance >= rewardAmount,
@@ -160,7 +166,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         for(uint256 i = 0; i < stakeInfos.size(); i++) {
             address key = stakeInfos.getKeyAtIndex(i);
             IterableMapping.StakeInfo storage stakeInfo =  stakeInfos.values[key];
-            stakeInfo.rewardAmount = rewardAmount.mul(stakeInfo.amount).div(projectTokenBalance);
+            stakeInfo.rewardAmount = stakeInfo.rewardAmount.add(rewardAmount.mul(stakeInfo.amount).div(totalStakedBalance));
         }
         
         emit AllocationUpdated();
@@ -181,7 +187,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         
         uint256 rewardAmount = stakeInfos.values[msg.sender].rewardAmount;
         stakeInfos.values[msg.sender].rewardAmount = 0;
-        tradedToken.transferFrom(address(this), msg.sender, rewardAmount);
+        tradedToken.transfer(msg.sender, rewardAmount);
     }
 
     /**
