@@ -1,11 +1,7 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
+const { BigNumber } = require("@ethersproject/bignumber")
 const { BN, time, expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-//  await increaseTime(7, "days");
-// await time.increase(60 * 60 * 24 * 7 + 1);
-// await time.advanceBlock();
-// time.latest()
-// time.latestBlock()
 
 describe("Pools", function () {
     let Pools, pools;
@@ -164,33 +160,12 @@ describe("Pools", function () {
         await expectRevert(pools.connect(alice).getRefund(), "Pool has not ended yet");
 
     });
-
     
-    it(" Withdraw Project Tokens Tests by owner", async () => {
-        
-        await increaseTime(7, "days");
-        await (pools.connect(owner).withdrawProjectTokens());
-        
-        balance = await pToken.balanceOf(pools.address);
-        console.log('pToken of pools===>', formatUnits(balance));
-    });
-    
-
-    it(" Withdraw Trade Tokens Tests by owner", async () => {
-        
-        await increaseTime(7, "days");
-        await (pools.connect(owner).withdrawTradeTokens());
-        
-        balance = await tradeToken.balanceOf(pools.address);
-        console.log('tradeToken of pools===> ', formatUnits(balance));
-    });
-    
-    it("Claim Token after Investing Tests by bob ", async () => {
+    it("Claim Token Fail after Investing Tests by bob ", async () => {
         
         // await increaseTime(7, "days");
-        await expectRevert(pools.connect(bob).claimTokens(),"Pool has failed");
+        await expectRevert(pools.connect(bob).claimTokens(),"Pool has not ended yet");
      
-
         balance = await tradeToken.balanceOf(bob.address);
         console.log('tradeToken of bob===>', formatUnits(balance));
 
@@ -202,20 +177,92 @@ describe("Pools", function () {
 
     });
     
+    it("Update Pool Decrease End End Time by owner Test", async () => {
+
+        endTime = await pools.connect(owner).PoolEndTime()
+        console.log("endTime======>", endTime.toString());
+
+        currentTime = await time.latest();
+
+        tx = await pools.connect(owner).updatePoolEndTime(BigNumber.from("1632536851"));
+        await tx.wait()
+        updatedEndTime = await pools.connect(owner).PoolEndTime()
+        console.log("updatedEndTime======>", updatedEndTime.toString());
+
+    });
+
+    it("Update Pool Increase End Time by owner Test", async () => {
+
+        endTime = await pools.connect(owner).PoolEndTime()
+        console.log("endTime======>", endTime.toString());
+
+        currentTime = await time.latest();
+
+        tx = await pools.connect(owner).updatePoolEndTime(BigNumber.from("1634990893"));
+        await tx.wait()
+        updatedEndTime = await pools.connect(owner).PoolEndTime()
+        console.log("updatedEndTime======>", updatedEndTime.toString());
+
+    });
+
+    it("Investing Tests by alice ", async () => {
+
+        balance = await tradeToken.balanceOf(pools.address);
+        console.log('tradeToken of pools===> ', formatUnits(balance));
+
+        tx = await tradeToken.connect(alice).faucet(parseUnits(20));
+        await tx.wait()
+
+        tx = await tradeToken.connect(alice).approve(pools.address, parseUnits(20));
+        await tx.wait()
+
+        tx = await pools.connect(alice).Invest(parseUnits(9));
+        await tx.wait()
+    });
+
+    it("Claim tokens Tests by alice ", async () => {
+
+        balance = await tradeToken.balanceOf(pools.address);
+        console.log('tradeToken of pools===> ', formatUnits(balance));
+
+        await increaseTime(2, "months");
+
+        tx = await pools.connect(alice).claimTokens();
+        await tx.wait()
+
+        balance = await pToken.balanceOf(alice.address);
+        console.log('ProjectToken of alice===> ', formatUnits(balance));
+
+    });
+
     it("Get Refund after Pool Investing Tests for Reaching Goal by alice ", async () => {
 
-        await increaseTime(7, "days");
+        await increaseTime(2, "months");
         await (pools.connect(bob).getRefund(), "Pool successful");
 
         balance = await tradeToken.balanceOf(bob.address);
         console.log('tradeToken of bob -->', formatUnits(balance));
-        // balance = await pToken.balanceOf(bob.address);
-        // console.log('pToken-->', formatUnits(balance));
+    });
+
+    it(" Withdraw Project Tokens Tests by owner", async () => {
+ 
+        await increaseTime(2, "months");
+        await (pools.connect(owner).withdrawProjectTokens());
+        
+        balance = await pToken.balanceOf(pools.address);
+        console.log('pToken of pools===>', formatUnits(balance));
     });
     
+    it(" Withdraw Trade Tokens Tests by owner", async () => {
+        
+        await increaseTime(2, "months");
+        await (pools.connect(owner).withdrawTradeTokens());
+        
+        balance = await tradeToken.balanceOf(pools.address);
+        console.log('tradeToken of pools===> ', formatUnits(balance));
+    });
+
 });
-
-
 
 // Lsit of Helper functions
 // Converts checksum
@@ -253,5 +300,5 @@ const formatUnits = (params) => {
 
 // Calculate Slippage, default 10 %
 const slippage = (params) => {
-    return params - params * 10 / 100
+    return params - params * 10 ;
 }

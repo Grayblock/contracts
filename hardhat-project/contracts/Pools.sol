@@ -163,7 +163,7 @@ contract Pools is Ownable {
         Investors[msg.sender].Claimed = true; // make sure this goes first before transfer to prevent reentrancy
         uint256 investment = Investors[msg.sender].Investment;
         uint256 poolBalance = tradeToken.balanceOf(address(this));
-        require(poolBalance > 0);
+        require(poolBalance > 0, "Balance of pool is zero");
 
         if (investment > poolBalance) {
             investment = poolBalance;
@@ -214,14 +214,14 @@ contract Pools is Ownable {
     function withdrawProjectTokens() public onlyOwner {
         require(hasPoolEnded(), "Pool has not ended yet");
         uint256 balance = projectToken.balanceOf(address(this));
-        require(balance >= 0);
+        require(balance >= 0, "Balance of pool is zero");
         projectToken.transfer(msg.sender, balance);
     }
 
     function withdrawTradeTokens() public onlyOwner {
         require(hasPoolEnded(), "Pool has not ended yet");
         uint256 balance = tradeToken.balanceOf(address(this));
-        require(balance >= 0);
+        require(balance >= 0, "Balance of pool is zero");
         tradeToken.transfer(msg.sender, balance);
     }
 
