@@ -155,4 +155,23 @@ describe("Staking", function() {
         expect(p1.sub(c1).toString()).to.equal('99');
         expect(c2.sub(p2).toString()).to.equal('99');
     })
+    it("Gas testing", async () => {
+        console.log(accounts.length);
+        await TradedTokenContract.approve(GrayblockStakingContract.address, 100);
+        await GrayblockStakingContract.putTradedToken(100);
+
+        for(let i = 1; i <= 19; i++) {
+            await ProjectTokenContract.transfer(accounts[i].address, 100);
+            await ProjectTokenContract.connect(accounts[i]).approve(GrayblockStakingContract.address, 100);
+            await GrayblockStakingContract.connect(accounts[i]).stake(100)
+        }
+
+        const receipt = await GrayblockStakingContract.estimateGas.updateAllocation(50);
+
+        console.log(receipt.toString());
+
+        console.log(await hre.ethers.accounts.create());
+
+        //console.log(receipt.gasLimit.toString() * receipt.gasPrice.toString())
+    })
 });
