@@ -1,0 +1,41 @@
+{
+	"compiler": {
+		"version": "0.6.2+commit.bacdbe57"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"details": "String operations.",
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"idoand-pool-smart-contract-21093903-cpp/Nft.sol": "Strings"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"idoand-pool-smart-contract-21093903-cpp/Nft.sol": {
+			"keccak256": "0x32f235d6304f317db13f083ef162a75bf5bcde49ab3b853ec3e0760d338ea394",
+			"urls": [
+				"bzz-raw://0e72d937bec3d523232a81f012db7581eee0af05c98b0fd7bf741a11444de404",
+				"dweb:/ipfs/QmcZk1xsNREZFc9DsgLHYp125UG4hE1GLbH611FQ5M4yWY"
+			]
+		}
+	},
+	"version": 1
+}

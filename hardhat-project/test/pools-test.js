@@ -176,7 +176,7 @@ describe("Pools", function () {
         console.log('pToken of bob===>', formatUnits(balance));
 
     });
-    
+
     it("Update Pool Decrease End End Time by owner Test", async () => {
 
         endTime = await pools.connect(owner).PoolEndTime()
@@ -284,6 +284,7 @@ const increaseTime = async (amount, type) => {
         // await time.increase(60  60  24 * 7 + 1);
     }
 }
+
 const address = (params) => {
     return ethers.utils.getAddress(params);
 }
