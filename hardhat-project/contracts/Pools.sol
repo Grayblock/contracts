@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.0;
+pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -92,9 +92,15 @@ contract Pools is Ownable {
         uint256 _goal,
         uint256 _cap
     ) external onlyOwner {
-        require(_goal <= _TotalTokenAmount, "Goal cannot be more than TotalTokenAmount");
+        require(
+            _goal <= _TotalTokenAmount,
+            "Goal cannot be more than TotalTokenAmount"
+        );
         require(_cap <= _goal, "Cap per user cannot be more than goal");
-        require(projectToken.balanceOf(msg.sender) >= _TotalTokenAmount, "ERC20: Balance is less than the total amount");
+        require(
+            projectToken.balanceOf(msg.sender) >= _TotalTokenAmount,
+            "ERC20: Balance is less than the total amount"
+        );
 
         TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
         PoolStartTime = _StartingTime;
@@ -119,7 +125,7 @@ contract Pools is Ownable {
         );
         if (Cap != 0) {
             require(
-                _amount <= Cap,
+                SafeMath.add(Investors[msg.sender].Investment, _amount) <= Cap,
                 "There is a limit for each user to buy and this amount is over the limit"
             );
         }

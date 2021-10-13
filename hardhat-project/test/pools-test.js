@@ -291,12 +291,12 @@ const address = (params) => {
 
 // Converts token units to smallest individual token unit, eg: 1 DAI = 10^18 units 
 const parseUnits = (params) => {
-    return ethers.utils.parseUnits(params.toString(), 18);
+    return ethers.utils.parseUnits(params.toString(), 0);
 }
 
 // Converts token units from smallest individual unit to token unit, opposite of parseUnits
 const formatUnits = (params) => {
-    return ethers.utils.formatUnits(params.toString(), 18);
+    return ethers.utils.formatUnits(params.toString(), 0);
 }
 
 // Calculate Slippage, default 10 %
