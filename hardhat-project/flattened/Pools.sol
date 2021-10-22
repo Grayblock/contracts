@@ -484,7 +484,6 @@ contract Pools is Ownable {
     }
 
     function claimTokens() external investorOnly notYetClaimedOrRefunded {
-        require(hasPoolEnded(), "Pool has not ended yet");
         require(hasGoalReached(), "Pool has failed");
 
         Investors[msg.sender].Claimed = true; // make sure this goes first before transfer to prevent reentrancy
