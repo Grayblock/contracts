@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
-
-pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
+pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./libs/IterableMapping.sol";
 
 /**
@@ -67,7 +67,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         IERC20 _tradedToken,
         IERC20 _projectToken,
         address _feeCollector
-    ) {
+    ) public {
         tradedToken = _tradedToken;
         projectToken = _projectToken;
         feeCollector = _feeCollector;

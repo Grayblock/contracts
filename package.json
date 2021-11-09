@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@ethersproject/bignumber": "^5.4.2",
-    "@openzeppelin/contracts": "^3.0.2",
+    "@openzeppelin/contracts": "^3.4.2",
     "@remix-project/remixd": "^0.5.2"
   }
 }

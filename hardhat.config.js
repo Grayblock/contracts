@@ -17,7 +17,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
- module.exports = {
+module.exports = {
   // defaultNetwork: "hardhat",
   networks: {
     hardhat: {
@@ -30,17 +30,20 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   solidity: {
     compilers: [
       {
+        version: "0.8.0",
+      },
+      {
         version: "0.6.12",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200
-          }
-        }
+            runs: 200,
+          },
+        },
       },
-    ]
+    ],
   },
   mocha: {
-    timeout: 10000
-  }
+    timeout: 10000,
+  },
 };
