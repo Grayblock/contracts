@@ -365,7 +365,6 @@ contract Pools is Ownable {
         uint256 Investment; //the amount of the main coin invested, calc with rate
         uint256 TokensOwn; //the amount of Tokens the investor needto get from the contract
         uint256 InvestTime; //the time that investment made
-        bool Claimed;
     }
 
     mapping(address => Investor) public Investors;
@@ -389,11 +388,6 @@ contract Pools is Ownable {
 
     modifier investorOnly() {
         require(Investors[msg.sender].Investment > 0, "Not an investor");
-        _;
-    }
-
-    modifier notYetClaimedOrRefunded() {
-        require(!Investors[msg.sender].Claimed, "Already claimed or refunded");
         _;
     }
 
@@ -453,16 +447,16 @@ contract Pools is Ownable {
         require(block.timestamp < PoolEndTime, "Closed");
         require(
             SafeMath.add(TotalCollectedWei, _amount) <= Goal,
-            "Pool token Goal has reached"
+            "Goal reached"
         );
         require(
             tradeToken.balanceOf(msg.sender) >= _amount && _amount != 0,
-            "The sender does not have the requested trade tokens to send"
+            "Insufficient TBUSD"
         );
         if (Cap != 0) {
             require(
                 SafeMath.add(Investors[msg.sender].Investment, _amount) <= Cap,
-                "There is a limit for each user to buy and this amount is over the limit"
+                "Cap exceeded"
             );
         }
 
@@ -474,7 +468,7 @@ contract Pools is Ownable {
                 _amount
             );
             Investors[msg.sender].TokensOwn = CalcTokens(
-                Investors[msg.sender].Investment
+                _amount
             );
         }
 
@@ -483,26 +477,28 @@ contract Pools is Ownable {
         TotalCollectedWei = SafeMath.add(TotalCollectedWei, _amount);
     }
 
-    function claimTokens() external investorOnly notYetClaimedOrRefunded {
+    function claimTokens() external investorOnly {
         require(hasGoalReached(), "Pool has failed");
+        uint256 tokens = Investors[msg.sender].TokensOwn;
+        require(tokens > 0, "Zero tokens to claim");
+        require(projectToken.balanceOf(address(this)) >= tokens, "In-sufficient balance");
 
-        Investors[msg.sender].Claimed = true; // make sure this goes first before transfer to prevent reentrancy
+        Investors[msg.sender].TokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
+        projectToken.transfer(msg.sender, tokens);
 
-        uint256 Tokens = CalcTokens(Investors[msg.sender].Investment);
-
-        projectToken.transfer(msg.sender, Tokens);
-        Investors[msg.sender].TokensOwn = 0;
-        emit TransferOut(Tokens, msg.sender, address(projectToken));
-
-        RegisterClaim(Tokens);
+        emit TransferOut(tokens, msg.sender, address(projectToken));
+        RegisterClaim(tokens);
     }
 
-    function getRefund() external investorOnly notYetClaimedOrRefunded {
+    function getRefund() external {
         require(hasPoolEnded(), "Pool has not ended yet");
         require(!hasGoalReached(), "Pool successful");
 
-        Investors[msg.sender].Claimed = true; // make sure this goes first before transfer to prevent reentrancy
         uint256 investment = Investors[msg.sender].Investment;
+        require(investment > 0, "Zero investment");
+
+        Investors[msg.sender].Investment = 0; // make sure this goes first before transfer to prevent reentrancy
+
         uint256 poolBalance = tradeToken.balanceOf(address(this));
         require(poolBalance > 0, "Balance of pool is zero");
 
@@ -510,12 +506,8 @@ contract Pools is Ownable {
             investment = poolBalance;
         }
 
-        if (investment > 0) {
-            tradeToken.transfer(msg.sender, investment);
-            emit TransferOut(investment, msg.sender, address(tradeToken));
-        }
-
-        Investors[msg.sender].Investment = 0;
+        tradeToken.transfer(msg.sender, investment);
+        emit TransferOut(investment, msg.sender, address(tradeToken));
     }
 
     function RegisterClaim(uint256 _Tokens) internal {
@@ -531,7 +523,7 @@ contract Pools is Ownable {
     {
         uint256 Tokens = CalcTokens(_Amount);
 
-        Investors[_Sender] = Investor(_Amount, Tokens, block.timestamp, false);
+        Investors[_Sender] = Investor(_Amount, Tokens, block.timestamp);
 
         TotalInvestors = SafeMath.add(TotalInvestors, 1);
         return SafeMath.sub(TotalInvestors, 1);
