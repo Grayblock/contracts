@@ -27,7 +27,9 @@ interface IERC20 {
      *
      * Emits a {Transfer} event.
      */
-    function transfer(address recipient, uint256 amount) external returns (bool);
+    function transfer(address recipient, uint256 amount)
+        external
+        returns (bool);
 
     /**
      * @dev Returns the remaining number of tokens that `spender` will be
@@ -36,7 +38,10 @@ interface IERC20 {
      *
      * This value changes when {approve} or {transferFrom} are called.
      */
-    function allowance(address owner, address spender) external view returns (uint256);
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint256);
 
     /**
      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
@@ -81,12 +86,14 @@ interface IERC20 {
      * @dev Emitted when the allowance of a `spender` for an `owner` is set by
      * a call to {approve}. `value` is the new allowance.
      */
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 }
 
-
 // File @openzeppelin/contracts/utils/math/SafeMath.sol@v4.3.0
-
 
 pragma solidity ^0.8.0;
 
@@ -106,7 +113,11 @@ library SafeMath {
      *
      * _Available since v3.4._
      */
-    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryAdd(uint256 a, uint256 b)
+        internal
+        pure
+        returns (bool, uint256)
+    {
         unchecked {
             uint256 c = a + b;
             if (c < a) return (false, 0);
@@ -119,7 +130,11 @@ library SafeMath {
      *
      * _Available since v3.4._
      */
-    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function trySub(uint256 a, uint256 b)
+        internal
+        pure
+        returns (bool, uint256)
+    {
         unchecked {
             if (b > a) return (false, 0);
             return (true, a - b);
@@ -131,7 +146,11 @@ library SafeMath {
      *
      * _Available since v3.4._
      */
-    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryMul(uint256 a, uint256 b)
+        internal
+        pure
+        returns (bool, uint256)
+    {
         unchecked {
             // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
             // benefit is lost if 'b' is also tested.
@@ -148,7 +167,11 @@ library SafeMath {
      *
      * _Available since v3.4._
      */
-    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryDiv(uint256 a, uint256 b)
+        internal
+        pure
+        returns (bool, uint256)
+    {
         unchecked {
             if (b == 0) return (false, 0);
             return (true, a / b);
@@ -160,7 +183,11 @@ library SafeMath {
      *
      * _Available since v3.4._
      */
-    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryMod(uint256 a, uint256 b)
+        internal
+        pure
+        returns (bool, uint256)
+    {
         unchecked {
             if (b == 0) return (false, 0);
             return (true, a % b);
@@ -313,9 +340,7 @@ library SafeMath {
     }
 }
 
-
 // File @openzeppelin/contracts/utils/Context.sol@v4.3.0
-
 
 pragma solidity ^0.8.0;
 
@@ -339,9 +364,7 @@ abstract contract Context {
     }
 }
 
-
 // File @openzeppelin/contracts/access/Ownable.sol@v4.3.0
-
 
 pragma solidity ^0.8.0;
 
@@ -360,7 +383,10 @@ pragma solidity ^0.8.0;
 abstract contract Ownable is Context {
     address private _owner;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
@@ -400,7 +426,10 @@ abstract contract Ownable is Context {
      * Can only be called by the current owner.
      */
     function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        require(
+            newOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
         _setOwner(newOwner);
     }
 
@@ -534,8 +563,7 @@ library IterableMapping {
             map.inserted[key] = true;
             map.values[key] = val;
             map.indexOf[key] = map.keys.length;
-            map.keys.push(key)
-;
+            map.keys.push(key);
         }
     }
 
@@ -574,26 +602,17 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /// @notice Event emitted only on construction. To be used by indexers
     event GrayblockStakingContractDeployed();
 
-    event TradedTokenPut(
-        address engeryDeveloper,
-        uint256 amount
-    );
+    event TradedTokenPut(address engeryDeveloper, uint256 amount);
 
-    event Staked(
-        address staker,
-        uint256 amount
-    );
+    event Staked(address staker, uint256 amount);
 
-    event UnStaked(
-        address staker,
-        uint256 amount
-    );
+    event UnStaked(address staker, uint256 amount);
 
     event AllocationUpdated();
 
     /// @notice Traded Token Instance
     IERC20 public tradedToken;
-    
+
     /// @notice Project Token Instance
     IERC20 public projectToken;
 
@@ -627,7 +646,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         projectToken = _projectToken;
         feeCollector = _feeCollector;
         feeBps = 100;
-        
+
         emit GrayblockStakingContractDeployed();
     }
 
@@ -656,19 +675,29 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             "insufficient balance"
         );
 
-        uint256 _actualAmount = _amount.mul(uint256(10000).sub(feeBps)).div(10000);
-        projectToken.transferFrom(msg.sender, feeCollector, _amount.sub(_actualAmount));
+        uint256 _actualAmount = _amount.mul(uint256(10000).sub(feeBps)).div(
+            10000
+        );
+        projectToken.transferFrom(
+            msg.sender,
+            feeCollector,
+            _amount.sub(_actualAmount)
+        );
         projectToken.transferFrom(msg.sender, address(this), _actualAmount);
 
-        if(stakeInfos.inserted[msg.sender]) {
-            stakeInfos.values[msg.sender].amount = stakeInfos.values[msg.sender].amount.add(_actualAmount);
+        if (stakeInfos.inserted[msg.sender]) {
+            stakeInfos.values[msg.sender].amount = stakeInfos
+                .values[msg.sender]
+                .amount
+                .add(_actualAmount);
             stakeInfos.values[msg.sender].stakedTime = _getNow();
         } else {
-            IterableMapping.StakeInfo memory stakeInfo = IterableMapping.StakeInfo({
-                amount: _actualAmount,
-                stakedTime: _getNow(),
-                rewardAmount: 0
-            });
+            IterableMapping.StakeInfo memory stakeInfo = IterableMapping
+                .StakeInfo({
+                    amount: _actualAmount,
+                    stakedTime: _getNow(),
+                    rewardAmount: 0
+                });
 
             stakeInfos.add(msg.sender, stakeInfo);
         }
@@ -683,18 +712,17 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
      * @param _amount Amount of project token
      */
     function unStake(uint256 _amount) external {
-        IterableMapping.StakeInfo storage stakeInfo =  stakeInfos.values[msg.sender];
-        
-        require(
-            stakeInfo.amount >= _amount,
-            "insufficient balance"
-        );
+        IterableMapping.StakeInfo storage stakeInfo = stakeInfos.values[
+            msg.sender
+        ];
+
+        require(stakeInfo.amount >= _amount, "insufficient balance");
         require(
             _getNow() >= stakeInfo.stakedTime.add(lockTime),
             "can not unstake during lock time"
         );
 
-        if(stakeInfo.amount == _amount) {
+        if (stakeInfo.amount == _amount) {
             stakeInfos.remove(msg.sender);
         } else {
             stakeInfo.amount = stakeInfo.amount.sub(_amount);
@@ -713,17 +741,18 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     function updateAllocation(uint256 rewardAmount) external onlyOwner {
         uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
 
-        require(
-            tradedTokenBalance >= rewardAmount,
-            "not enough reward"
-        );
+        require(tradedTokenBalance >= rewardAmount, "not enough reward");
 
-        for(uint256 i = 0; i < stakeInfos.size(); i++) {
+        for (uint256 i = 0; i < stakeInfos.size(); i++) {
             address key = stakeInfos.getKeyAtIndex(i);
-            IterableMapping.StakeInfo storage stakeInfo =  stakeInfos.values[key];
-            stakeInfo.rewardAmount = stakeInfo.rewardAmount.add(rewardAmount.mul(stakeInfo.amount).div(totalStakedBalance));
+            IterableMapping.StakeInfo storage stakeInfo = stakeInfos.values[
+                key
+            ];
+            stakeInfo.rewardAmount = stakeInfo.rewardAmount.add(
+                rewardAmount.mul(stakeInfo.amount).div(totalStakedBalance)
+            );
         }
-        
+
         emit AllocationUpdated();
     }
 
@@ -731,15 +760,9 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
      * @notice Users can claim reward
      */
     function claimReward() public {
-        require(
-            stakeInfos.inserted[msg.sender],
-            "not staker"
-        );
-        require(
-            stakeInfos.values[msg.sender].rewardAmount > 0,
-            "no reward"
-        );
-        
+        require(stakeInfos.inserted[msg.sender], "not staker");
+        require(stakeInfos.values[msg.sender].rewardAmount > 0, "no reward");
+
         uint256 rewardAmount = stakeInfos.values[msg.sender].rewardAmount;
         stakeInfos.values[msg.sender].rewardAmount = 0;
         tradedToken.transfer(msg.sender, rewardAmount);
@@ -748,28 +771,28 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Get staking balance for each user
      */
-    function getStake() external view returns(uint256) {
+    function getStake() external view returns (uint256) {
         return stakeInfos.values[msg.sender].amount;
     }
 
     /**
      * @notice Get staking time for each user
      */
-    function getStakeTime() external view returns(uint256) {
+    function getStakeTime() external view returns (uint256) {
         return stakeInfos.values[msg.sender].stakedTime;
     }
 
     /**
      * @notice Get if the user has staked or not
      */
-    function getIfStake() external view returns(bool) {
+    function getIfStake() external view returns (bool) {
         return stakeInfos.inserted[msg.sender];
     }
 
     /**
      * @notice Get reward amount for each user
      */
-    function getReward() external view returns(uint256) {
+    function getReward() external view returns (uint256) {
         return stakeInfos.values[msg.sender].rewardAmount;
     }
 

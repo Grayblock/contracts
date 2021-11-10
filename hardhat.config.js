@@ -26,6 +26,12 @@ module.exports = {
       //   blockNumber: 13178618,
       // }
     },
+    testnet: {
+      url: process.env.FUJI_RPC_URL,
+      accounts: [`0x${process.env.PK}`],
+      chainId: 43113,
+      gas: "auto",
+    },
   },
   solidity: {
     compilers: [
