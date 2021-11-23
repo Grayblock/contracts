@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Pools is Ownable {
@@ -29,14 +29,16 @@ contract Pools is Ownable {
         uint256 Investment; //the amount of the main coin invested, calc with rate
         uint256 TokensOwn; //the amount of Tokens the investor needto get from the contract
         uint256 InvestTime; //the time that investment made
-        bool Claimed;
+        uint256 TokensClaimed;
     }
 
     mapping(address => Investor) public Investors;
+    bool public newPool = true;
 
     constructor(address _projectToken, address _tradeToken) public {
         projectToken = IERC20(_projectToken);
         tradeToken = IERC20(_tradeToken);
+        newPool = true;
     }
 
     modifier TestAllownce(
@@ -53,11 +55,6 @@ contract Pools is Ownable {
 
     modifier investorOnly() {
         require(Investors[msg.sender].Investment > 0, "Not an investor");
-        _;
-    }
-
-    modifier notYetClaimedOrRefunded() {
-        require(!Investors[msg.sender].Claimed, "Already claimed or refunded");
         _;
     }
 
@@ -103,13 +100,25 @@ contract Pools is Ownable {
         );
 
         TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
+
         PoolStartTime = _StartingTime;
         PoolEndTime = _StartingTime + (86400 * 7);
-        // PoolEndTime = _StartingTime + 600;
-        Goal = _goal;
-        Cap = _cap;
-        TotalTokenAmount = _TotalTokenAmount;
-        LeftTokens = _TotalTokenAmount;
+
+        if (newPool) {
+            Goal = _goal;
+            Cap = _cap;
+            TotalTokenAmount = _TotalTokenAmount;
+            LeftTokens = _TotalTokenAmount;
+            newPool = false;
+        } else {
+            Goal = SafeMath.add(Goal, _goal);
+            Cap = SafeMath.add(Cap, _cap);
+            TotalTokenAmount = SafeMath.add(
+                TotalTokenAmount,
+                _TotalTokenAmount
+            );
+            LeftTokens = SafeMath.add(LeftTokens, _TotalTokenAmount);
+        }
     }
 
     function Invest(uint256 _amount) external {
@@ -117,16 +126,16 @@ contract Pools is Ownable {
         require(block.timestamp < PoolEndTime, "Closed");
         require(
             SafeMath.add(TotalCollectedWei, _amount) <= Goal,
-            "Pool token Goal has reached"
+            "Goal reached"
         );
         require(
             tradeToken.balanceOf(msg.sender) >= _amount && _amount != 0,
-            "The sender does not have the requested trade tokens to send"
+            "Insufficient TBUSD"
         );
         if (Cap != 0) {
             require(
                 SafeMath.add(Investors[msg.sender].Investment, _amount) <= Cap,
-                "There is a limit for each user to buy and this amount is over the limit"
+                "Cap exceeded"
             );
         }
 
@@ -137,8 +146,12 @@ contract Pools is Ownable {
                 Investors[msg.sender].Investment,
                 _amount
             );
+
             Investors[msg.sender].TokensOwn = CalcTokens(
-                Investors[msg.sender].Investment
+                SafeMath.sub(
+                    Investors[msg.sender].Investment,
+                    Investors[msg.sender].TokensClaimed
+                )
             );
         }
 
@@ -147,40 +160,47 @@ contract Pools is Ownable {
         TotalCollectedWei = SafeMath.add(TotalCollectedWei, _amount);
     }
 
-    function claimTokens() external investorOnly notYetClaimedOrRefunded {
-        require(hasPoolEnded(), "Pool has not ended yet");
+    function claimTokens() external investorOnly {
         require(hasGoalReached(), "Pool has failed");
+        uint256 tokens = Investors[msg.sender].TokensOwn;
+        require(tokens > 0, "Zero tokens to claim");
+        require(
+            projectToken.balanceOf(address(this)) >= tokens,
+            "In-sufficient balance"
+        );
 
-        Investors[msg.sender].Claimed = true; // make sure this goes first before transfer to prevent reentrancy
+        Investors[msg.sender].TokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
+        Investors[msg.sender].TokensClaimed = tokens;
 
-        uint256 Tokens = CalcTokens(Investors[msg.sender].Investment);
+        projectToken.transfer(msg.sender, tokens);
 
-        projectToken.transfer(msg.sender, Tokens);
-        Investors[msg.sender].TokensOwn = 0;
-        emit TransferOut(Tokens, msg.sender, address(projectToken));
-
-        RegisterClaim(Tokens);
+        emit TransferOut(tokens, msg.sender, address(projectToken));
+        RegisterClaim(tokens);
     }
 
-    function getRefund() external investorOnly notYetClaimedOrRefunded {
+    function getRefund() external {
         require(hasPoolEnded(), "Pool has not ended yet");
         require(!hasGoalReached(), "Pool successful");
+        require(Investors[msg.sender].Investment > 0, "Zero investment");
 
-        Investors[msg.sender].Claimed = true; // make sure this goes first before transfer to prevent reentrancy
-        uint256 investment = Investors[msg.sender].Investment;
+        uint256 refundAmount = SafeMath.sub(
+            Investors[msg.sender].Investment,
+            Investors[msg.sender].TokensClaimed
+        );
+        require(refundAmount > 0, "Zero refunds");
+
+        Investors[msg.sender].Investment = 0; // make sure this goes first before transfer to prevent reentrancy
+        Investors[msg.sender].TokensOwn = 0;
+
         uint256 poolBalance = tradeToken.balanceOf(address(this));
         require(poolBalance > 0, "Balance of pool is zero");
 
-        if (investment > poolBalance) {
-            investment = poolBalance;
+        if (refundAmount > poolBalance) {
+            refundAmount = poolBalance;
         }
 
-        if (investment > 0) {
-            tradeToken.transfer(msg.sender, investment);
-            emit TransferOut(investment, msg.sender, address(tradeToken));
-        }
-
-        Investors[msg.sender].Investment = 0;
+        tradeToken.transfer(msg.sender, refundAmount);
+        emit TransferOut(refundAmount, msg.sender, address(tradeToken));
     }
 
     function RegisterClaim(uint256 _Tokens) internal {
@@ -196,7 +216,7 @@ contract Pools is Ownable {
     {
         uint256 Tokens = CalcTokens(_Amount);
 
-        Investors[_Sender] = Investor(_Amount, Tokens, block.timestamp, false);
+        Investors[_Sender] = Investor(_Amount, Tokens, block.timestamp, 0);
 
         TotalInvestors = SafeMath.add(TotalInvestors, 1);
         return SafeMath.sub(TotalInvestors, 1);
