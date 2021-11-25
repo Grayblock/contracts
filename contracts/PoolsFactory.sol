@@ -1,11 +1,11 @@
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import './Token.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import "./Pools.sol";
 
 contract PoolsFactory is Ownable {
-  ERC20 public tradeToken;
+  Token public tradeToken;
   address[] public poolsAddresses;
   address private admin;
 
@@ -21,7 +21,7 @@ contract PoolsFactory is Ownable {
 
   mapping(address => Pool) public poolsData;
 
-  constructor(ERC20 _tradeToken, address _admin) {
+  constructor(Token _tradeToken, address _admin) {
     tradeToken = _tradeToken;
     admin = _admin;
   }
@@ -30,17 +30,17 @@ contract PoolsFactory is Ownable {
     string memory _name,
     string memory _symbol
   ) public pure returns (bytes memory) {
-    bytes memory bytecode = type(ERC20).creationCode;
+    bytes memory bytecode = type(Token).creationCode;
 
     return abi.encodePacked(bytecode, abi.encode(_name, _symbol));
   }
 
   function getPoolsBytecode(
-    ERC20 _projectToken
+    Token _projectToken
   ) public view returns (bytes memory) {
     bytes memory bytecode = type(Pools).creationCode;
 
-    return abi.encodePacked(bytecode, abi.encode(_projectToken, tradeToken, admin));
+    return abi.encodePacked(bytecode, abi.encode(_projectToken, tradeToken));
   }
 
   function getAddress(bytes memory bytecode)
@@ -71,12 +71,12 @@ contract PoolsFactory is Ownable {
     emit Deployed(addr, SALT);
   }
 
-  function DeployPool(string memory _poolName, string memory _name, string memory _symbol) external onlyOwner {
+  function deployPool(string memory _poolName, string memory _name, string memory _symbol) external onlyOwner {
     bytes memory projectTokenByteCode = getTokenBytecode(_name, _symbol);
     address projectTokenAddress = getAddress(projectTokenByteCode);
     deploy(projectTokenByteCode);
 
-    bytes memory poolsByteCode = getPoolsBytecode(ERC20(projectTokenAddress));
+    bytes memory poolsByteCode = getPoolsBytecode(Token(projectTokenAddress));
     address poolsAddress = getAddress(poolsByteCode);
     deploy(poolsByteCode);
 
@@ -84,4 +84,25 @@ contract PoolsFactory is Ownable {
     poolsData[poolsAddress] = Pool(projectTokenAddress, _poolName);
     emit NewPool(poolsAddress);
   }
+
+  function createPoolAndTransferOwnerships(address _pool, uint256 _totalTokenAmount, 
+        uint256 _startingTime, 
+        uint256 _goal,
+        uint256 _cap) external onlyOwner {
+          address projectToken = poolsData[_pool].projectToken;
+          require(projectToken != address(0), "PoolsFactory: Invalid pool");
+
+          require(Token(projectToken).approve(_pool, _totalTokenAmount), "PoolsFactory: FAILED to approve");
+          
+          Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
+
+        
+          uint256 balance = Token(projectToken).balanceOf(address(this));
+          // send balance from address(this) to admin
+          Token(projectToken).transfer(admin, balance);
+
+          // transfer ownerships of pool and project token to admin
+          Pools(_pool).transferOwnership(admin);
+          Token(projectToken).transferOwnership(admin);
+        }
 }

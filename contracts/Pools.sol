@@ -35,11 +35,10 @@ contract Pools is Ownable {
     mapping(address => Investor) public Investors;
     bool public newPool = true;
 
-    constructor(address _projectToken, address _tradeToken, address _admin) {
+    constructor(address _projectToken, address _tradeToken) {
         projectToken = IERC20(_projectToken);
         tradeToken = IERC20(_tradeToken);
         newPool = true;
-        transferOwnership(_admin);
     }
 
     modifier TestAllownce(

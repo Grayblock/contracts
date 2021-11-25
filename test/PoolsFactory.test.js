@@ -13,8 +13,8 @@ describe("PoolsFactory", () => {
 
   beforeEach(async () => {
     [owner, alice, bob] = await ethers.getSigners();
-    const MockTBUSD = await ethers.getContractFactory("MockToken");
-    mockTBUSD = await MockTBUSD.deploy(name, symbol);
+    const MockTBUSD = await ethers.getContractFactory("Token");
+    mockTBUSD = await MockTBUSD.deploy(name, symbol, owner.address);
     await mockTBUSD.deployed();
 
     const PoolsFactory = await ethers.getContractFactory("PoolsFactory");
