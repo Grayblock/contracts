@@ -92,17 +92,10 @@ contract PoolsFactory is Ownable {
           address projectToken = poolsData[_pool].projectToken;
           require(projectToken != address(0), "PoolsFactory: Invalid pool");
 
-          require(Token(projectToken).approve(_pool, _totalTokenAmount), "PoolsFactory: FAILED to approve");
-          
+          Token(projectToken).transferOwnership(_pool);
+
           Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
 
-        
-          uint256 balance = Token(projectToken).balanceOf(address(this));
-          // send balance from address(this) to admin
-          Token(projectToken).transfer(admin, balance);
-
-          // transfer ownerships of pool and project token to admin
           Pools(_pool).transferOwnership(admin);
-          Token(projectToken).transferOwnership(admin);
         }
 }
