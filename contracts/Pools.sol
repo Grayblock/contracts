@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./Token.sol";
 
 contract Pools is Ownable {
     event FinishPool();
@@ -22,8 +23,8 @@ contract Pools is Ownable {
     uint256 public TotalInvestors; // total number of investors in a particular pool
     uint256 public TotalCollectedWei;
 
-    IERC20 public projectToken;
-    IERC20 public tradeToken;
+    Token public projectToken;
+    Token public tradeToken;
 
     struct Investor {
         uint256 Investment; //the amount of the main coin invested, calc with rate
@@ -33,11 +34,11 @@ contract Pools is Ownable {
     }
 
     mapping(address => Investor) public Investors;
-    bool public newPool = true;
+    bool public newPool;
 
     constructor(address _projectToken, address _tradeToken) {
-        projectToken = IERC20(_projectToken);
-        tradeToken = IERC20(_tradeToken);
+        projectToken = Token(_projectToken);
+        tradeToken = Token(_tradeToken);
         newPool = true;
     }
 
@@ -95,11 +96,11 @@ contract Pools is Ownable {
         );
         require(_cap <= _goal, "Cap per user cannot be more than goal");
         require(
-            projectToken.balanceOf(msg.sender) >= _TotalTokenAmount,
-            "ERC20: Balance is less than the total amount"
+            projectToken.owner() == address(this),
+            "Pools: not owner"
         );
 
-        TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
+        // TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
 
         PoolStartTime = _StartingTime;
         PoolEndTime = _StartingTime + (86400 * 7);
@@ -172,7 +173,7 @@ contract Pools is Ownable {
         Investors[msg.sender].TokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
         Investors[msg.sender].TokensClaimed = tokens;
 
-        projectToken.transfer(msg.sender, tokens);
+        projectToken.mint(msg.sender, tokens);
 
         emit TransferOut(tokens, msg.sender, address(projectToken));
         RegisterClaim(tokens);
@@ -237,12 +238,9 @@ contract Pools is Ownable {
         Cap = _cap;
     }
 
-    function withdrawProjectTokens() public onlyOwner {
-        require(hasPoolEnded(), "Pool has not ended yet");
-        uint256 balance = projectToken.balanceOf(address(this));
-        require(balance >= 0, "Balance of pool is zero");
-        projectToken.transfer(msg.sender, balance);
-    }
+    // function mintProjectTokens(address _account, uint256 _amount) public onlyOwner {
+    //     projectToken.mint(_account, _amount);
+    // }
 
     function withdrawTradeTokens() public onlyOwner {
         require(hasPoolEnded(), "Pool has not ended yet");
