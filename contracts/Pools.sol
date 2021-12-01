@@ -238,9 +238,9 @@ contract Pools is Ownable {
         Cap = _cap;
     }
 
-    // function mintProjectTokens(address _account, uint256 _amount) public onlyOwner {
-    //     projectToken.mint(_account, _amount);
-    // }
+    function mintProjectTokens(address _account, uint256 _amount) public onlyOwner {
+        projectToken.mint(_account, _amount);
+    }
 
     function withdrawTradeTokens() public onlyOwner {
         require(hasPoolEnded(), "Pool has not ended yet");

@@ -85,6 +85,10 @@ contract PoolsFactory is Ownable {
     emit NewPool(poolsAddress);
   }
 
+  function getPools() public view returns (address[] memory) {
+    return poolsAddresses;
+  }
+
   function createPoolAndTransferOwnerships(address _pool, uint256 _totalTokenAmount, 
         uint256 _startingTime, 
         uint256 _goal,
