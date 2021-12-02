@@ -24,7 +24,7 @@ contract StakingFactory is Ownable {
         emit StakingDeployed(address(_tradeToken), address(_projectToken), _feeCollector);
     }
 
-    function harvestAll(address _staker) external onlyOwner {
+    function harvestAll(address _staker) external {
        for (uint256 i = 0; i < stakingAddresses.length; i++) {
          address stakeAddress = stakingAddresses[i];
          if (GrayblockStaking(stakeAddress).canClaimReward(_staker)) {
