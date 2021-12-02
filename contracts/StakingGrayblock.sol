@@ -27,6 +27,11 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
 
     event AllocationUpdated();
 
+    string public name;
+
+    /// @notice factory contract
+    address public factory;
+
     /// @notice Traded Token Instance
     IERC20 public tradedToken;
 
@@ -57,12 +62,16 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     constructor(
         IERC20 _tradedToken,
         IERC20 _projectToken,
-        address _feeCollector
-    ) public {
+        address _feeCollector,
+        address _factory,
+        string memory _name
+    ) {
         tradedToken = _tradedToken;
         projectToken = _projectToken;
         feeCollector = _feeCollector;
+        factory = _factory;
         feeBps = 100;
+        name = _name;
 
         emit GrayblockStakingContractDeployed();
     }
@@ -176,13 +185,13 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Users can claim reward
      */
-    function claimReward() public {
-        require(stakeInfos.inserted[msg.sender], "not staker");
-        require(stakeInfos.values[msg.sender].rewardAmount > 0, "no reward");
+    function claimReward(address _staker) public {
+        require(stakeInfos.inserted[_staker], "GrayblockStaking: not staker");
+        require(canClaimReward(_staker), "GrayblockStaking: no reward");
 
-        uint256 rewardAmount = stakeInfos.values[msg.sender].rewardAmount;
-        stakeInfos.values[msg.sender].rewardAmount = 0;
-        tradedToken.transfer(msg.sender, rewardAmount);
+        uint256 rewardAmount = stakeInfos.values[_staker].rewardAmount;
+        stakeInfos.values[_staker].rewardAmount = 0;
+        tradedToken.transfer(_staker, rewardAmount);
     }
 
     /**
@@ -239,5 +248,9 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
 
     function _getNow() internal view virtual returns (uint256) {
         return block.timestamp;
+    }
+
+    function canClaimReward(address _account) public view returns (bool) {
+      return stakeInfos.values[_account].rewardAmount > 0;
     }
 }
