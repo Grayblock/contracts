@@ -13,6 +13,7 @@ contract Pools is Ownable {
 
     event TransferOut(uint256 Amount, address To, address Token);
     event TransferIn(uint256 Amount, address From, address Token);
+    event GoalReached(uint256 indexed _goal, address indexed _account);
 
     uint256 public Goal;
     uint256 public Cap;
@@ -159,16 +160,13 @@ contract Pools is Ownable {
         tradeToken.transferFrom(msg.sender, address(this), _amount);
 
         TotalCollectedWei = SafeMath.add(TotalCollectedWei, _amount);
+        _goalReached();
     }
 
     function claimTokens() external investorOnly {
         require(hasGoalReached(), "Pool has failed");
         uint256 tokens = Investors[msg.sender].TokensOwn;
         require(tokens > 0, "Zero tokens to claim");
-        require(
-            projectToken.balanceOf(address(this)) >= tokens,
-            "In-sufficient balance"
-        );
 
         Investors[msg.sender].TokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
         Investors[msg.sender].TokensClaimed = tokens;
@@ -257,5 +255,11 @@ contract Pools is Ownable {
     function hasGoalReached() public view returns (bool) {
         if (tradeToken.balanceOf(address(this)) >= Goal) return true;
         else return false;
+    }
+
+    function _goalReached() internal {
+      if (hasGoalReached()) {
+        emit GoalReached(Goal, msg.sender);
+      }
     }
 }
