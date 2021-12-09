@@ -13,8 +13,21 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
-  const PoolsFactory = await hre.ethers.getContractFactory("PoolsFactory");
-  const poolsFactory = await PoolsFactory.deploy(process.env.TRADE_TOKEN, process.env.ADMIN);
+
+  const FactoryLib = await hre.ethers.getContractFactory("Factory");
+  const factoryLib = await FactoryLib.deploy();
+  await factoryLib.deployed();
+  console.log("Lib Factory deployed to:", factoryLib.address);
+
+  const PoolsFactory = await hre.ethers.getContractFactory("PoolsFactory", {
+    libraries: {
+      Factory: factoryLib.address,
+    },
+  });
+  const poolsFactory = await PoolsFactory.deploy(
+    process.env.TRADE_TOKEN,
+    process.env.ADMIN
+  );
   await poolsFactory.deployed();
   console.log("PoolsFactory deployed to:", poolsFactory.address);
 }
@@ -27,4 +40,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-

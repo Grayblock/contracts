@@ -21,13 +21,22 @@ async function main() {
   await iterableMapping.deployed();
   console.log("Lib IterableMapping deployed to:", iterableMapping.address);
 
+
+  const FactoryLib = await hre.ethers.getContractFactory(
+    "Factory"
+  );
+  const factoryLib = await FactoryLib.deploy();
+  await factoryLib.deployed();
+  console.log("Lib Factory deployed to:", factoryLib.address);
+
   const StakeFactory = await hre.ethers.getContractFactory("StakingFactory", {
     libraries: {
       IterableMapping: iterableMapping.address,
+      Factory: factoryLib.address
     },
   });
 
-  const stakeFactory = await StakeFactory.deploy(process.env.FEE_COLLECTOR);
+  const stakeFactory = await StakeFactory.deploy(process.env.FEE_COLLECTOR, process.env.TRADE_TOKEN);
   await stakeFactory.deployed();
   console.log("stakeFactory deployed to:", stakeFactory.address);
 }
