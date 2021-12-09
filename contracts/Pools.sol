@@ -13,7 +13,11 @@ contract Pools is Ownable {
 
     event TransferOut(uint256 Amount, address To, address Token);
     event TransferIn(uint256 Amount, address From, address Token);
-    event GoalReached(uint256 indexed _goal, address indexed _account);
+    event GoalReached(
+        uint256 indexed _goal,
+        address indexed _account,
+        address indexed _projectToken
+    );
 
     uint256 public Goal;
     uint256 public Cap;
@@ -96,10 +100,7 @@ contract Pools is Ownable {
             "Goal cannot be more than TotalTokenAmount"
         );
         require(_cap <= _goal, "Cap per user cannot be more than goal");
-        require(
-            projectToken.owner() == address(this),
-            "Pools: not owner"
-        );
+        require(projectToken.owner() == address(this), "Pools: not owner");
 
         // TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
 
@@ -236,7 +237,10 @@ contract Pools is Ownable {
         Cap = _cap;
     }
 
-    function mintProjectTokens(address _account, uint256 _amount) public onlyOwner {
+    function mintProjectTokens(address _account, uint256 _amount)
+        public
+        onlyOwner
+    {
         projectToken.mint(_account, _amount);
     }
 
@@ -258,8 +262,8 @@ contract Pools is Ownable {
     }
 
     function _goalReached() internal {
-      if (hasGoalReached()) {
-        emit GoalReached(Goal, msg.sender);
-      }
+        if (hasGoalReached()) {
+            emit GoalReached(Goal, msg.sender, address(projectToken));
+        }
     }
 }

@@ -56,8 +56,7 @@ library IterableMapping {
             map.inserted[key] = true;
             map.values[key] = val;
             map.indexOf[key] = map.keys.length;
-            map.keys.push(key)
-;
+            map.keys.push(key);
         }
     }
 

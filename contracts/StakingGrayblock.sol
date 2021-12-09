@@ -25,6 +25,8 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
 
     event UnStaked(address staker, uint256 amount);
 
+    event ClaimReward(address staker, uint256 amount);
+
     event AllocationUpdated();
 
     string public name;
@@ -192,6 +194,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         uint256 rewardAmount = stakeInfos.values[_staker].rewardAmount;
         stakeInfos.values[_staker].rewardAmount = 0;
         tradedToken.transfer(_staker, rewardAmount);
+        emit ClaimReward(_staker, rewardAmount);
     }
 
     /**
@@ -251,6 +254,6 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     }
 
     function canClaimReward(address _account) public view returns (bool) {
-      return stakeInfos.values[_account].rewardAmount > 0;
+        return stakeInfos.values[_account].rewardAmount > 0;
     }
 }
