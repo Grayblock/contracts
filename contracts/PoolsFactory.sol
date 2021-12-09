@@ -21,6 +21,7 @@ contract PoolsFactory is FactoryStorage, Ownable {
 
     function getTokenBytecode(string memory _name, string memory _symbol)
         public
+        view
         returns (bytes memory)
     {
         bytes memory creationCode = type(Token).creationCode;
@@ -29,6 +30,7 @@ contract PoolsFactory is FactoryStorage, Ownable {
 
     function getPoolsBytecode(Token _projectToken)
         public
+        view
         returns (bytes memory)
     {
         bytes memory creationCode = type(Pools).creationCode;
@@ -39,8 +41,8 @@ contract PoolsFactory is FactoryStorage, Ownable {
             );
     }
 
-    function getAddress(bytes memory _bytecode) public returns (address) {
-        return Factory.getAddress(_bytecode);
+    function getAddress(bytes memory _bytecode) public view returns (address) {
+        return Factory.getAddress(_bytecode, address(this));
     }
 
     function _deploy(bytes memory bytecode) internal {

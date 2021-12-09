@@ -14,16 +14,7 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const FactoryLib = await hre.ethers.getContractFactory("Factory");
-  const factoryLib = await FactoryLib.deploy();
-  await factoryLib.deployed();
-  console.log("Lib Factory deployed to:", factoryLib.address);
-
-  const PoolsFactory = await hre.ethers.getContractFactory("PoolsFactory", {
-    libraries: {
-      Factory: factoryLib.address,
-    },
-  });
+  const PoolsFactory = await hre.ethers.getContractFactory("PoolsFactory");
   const poolsFactory = await PoolsFactory.deploy(
     process.env.TRADE_TOKEN,
     process.env.ADMIN

@@ -4,20 +4,20 @@ library Factory {
     uint256 constant SALT = 0xff;
 
     function getByteCode(bytes memory _hash, bytes memory _creationCode)
-        public
+        internal
+        pure
         returns (bytes memory)
     {
         return abi.encodePacked(_creationCode, _hash);
     }
 
-    function getAddress(bytes memory _bytecode) public returns (address) {
+    function getAddress(bytes memory _bytecode, address _caller)
+        internal
+        pure
+        returns (address)
+    {
         bytes32 hash = keccak256(
-            abi.encodePacked(
-                bytes1(0xff),
-                address(this),
-                SALT,
-                keccak256(_bytecode)
-            )
+            abi.encodePacked(bytes1(0xff), _caller, SALT, keccak256(_bytecode))
         );
 
         // NOTE: cast last 20 bytes of hash to address

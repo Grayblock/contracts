@@ -27,6 +27,7 @@ contract StakingFactory is FactoryStorage, Ownable {
 
     function getBytecode(Token _projectToken, string memory _name)
         public
+        view
         returns (bytes memory)
     {
         bytes memory creationCode = type(GrayblockStaking).creationCode;
@@ -44,8 +45,8 @@ contract StakingFactory is FactoryStorage, Ownable {
             );
     }
 
-    function getAddress(bytes memory _bytecode) public returns (address) {
-        return Factory.getAddress(_bytecode);
+    function getAddress(bytes memory _bytecode) public view returns (address) {
+        return Factory.getAddress(_bytecode, address(this));
     }
 
     function _deploy(bytes memory bytecode, Token _projectToken) internal {
