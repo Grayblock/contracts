@@ -4,15 +4,15 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./Token.sol";
 
 contract Pools is Ownable {
     event FinishPool();
     event PoolUpdate();
 
-    event TransferOut(uint256 Amount, address To, address Token);
-    event TransferIn(uint256 Amount, address From, address Token);
+    event TransferOut(uint256 _amount, address To, address _token);
+    event TransferIn(uint256 _amount, address From, address _token);
     event GoalReached(
         uint256 indexed _goal,
         address indexed _account,
@@ -29,7 +29,7 @@ contract Pools is Ownable {
     uint256 public TotalCollectedWei;
 
     Token public projectToken;
-    Token public tradeToken;
+    ERC20 public tradeToken;
 
     struct Investor {
         uint256 Investment; //the amount of the main coin invested, calc with rate
@@ -43,7 +43,7 @@ contract Pools is Ownable {
 
     constructor(address _projectToken, address _tradeToken) {
         projectToken = Token(_projectToken);
-        tradeToken = Token(_tradeToken);
+        tradeToken = ERC20(_tradeToken);
         newPool = true;
     }
 
@@ -133,7 +133,7 @@ contract Pools is Ownable {
         );
         require(
             tradeToken.balanceOf(msg.sender) >= _amount && _amount != 0,
-            "Insufficient TBUSD"
+            "Insufficient trade token"
         );
         if (Cap != 0) {
             require(

@@ -1,9 +1,9 @@
 pragma solidity ^0.8.0;
 
-import "./Token.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract FactoryStorage {
-    Token public tradeToken;
+    IERC20 public tradeToken;
 
     struct Pool {
         address projectToken;

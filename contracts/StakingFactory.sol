@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./Token.sol";
 import "./StakingGrayblock.sol";
 import "./FactoryStorage.sol";
@@ -20,7 +21,7 @@ contract StakingFactory is FactoryStorage, Ownable {
 
     uint256 constant SALT = 0xff;
 
-    constructor(address _feeCollector, Token _tradeToken) {
+    constructor(address _feeCollector, IERC20 _tradeToken) {
         feeCollector = _feeCollector;
         tradeToken = _tradeToken;
     }
@@ -71,6 +72,7 @@ contract StakingFactory is FactoryStorage, Ownable {
         _deploy(byteCode, _projectToken);
         address stakePoolAddress = getAddress(byteCode);
         poolsData[stakePoolAddress] = Pool(address(_projectToken), _name);
+        stakingAddresses.push(stakePoolAddress);
         emit NewPool(stakePoolAddress);
     }
 

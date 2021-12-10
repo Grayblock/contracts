@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 import "./Token.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Pools.sol";
 import "./FactoryStorage.sol";
@@ -14,7 +15,7 @@ contract PoolsFactory is FactoryStorage, Ownable {
 
     event Deployed(address addr, uint256 salt);
 
-    constructor(Token _tradeToken, address _admin) {
+    constructor(IERC20 _tradeToken, address _admin) {
         tradeToken = _tradeToken;
         admin = _admin;
     }
