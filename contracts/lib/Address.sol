@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-library Factory {
+library Address {
     uint256 constant SALT = 0xff;
 
     function getByteCode(bytes memory _hash, bytes memory _creationCode)

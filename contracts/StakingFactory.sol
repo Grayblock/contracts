@@ -4,10 +4,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./Token.sol";
 import "./StakingGrayblock.sol";
-import "./FactoryStorage.sol";
-import "./lib/Factory.sol";
+import "./Factory.sol";
+import "./lib/Address.sol";
 
-contract StakingFactory is FactoryStorage, Ownable {
+contract StakingFactory is Factory, Ownable {
     address[] public stakingAddresses;
     address public feeCollector;
 
@@ -34,7 +34,7 @@ contract StakingFactory is FactoryStorage, Ownable {
         bytes memory creationCode = type(GrayblockStaking).creationCode;
 
         return
-            Factory.getByteCode(
+            Address.getByteCode(
                 abi.encode(
                     tradeToken,
                     _projectToken,
@@ -47,7 +47,7 @@ contract StakingFactory is FactoryStorage, Ownable {
     }
 
     function getAddress(bytes memory _bytecode) public view returns (address) {
-        return Factory.getAddress(_bytecode, address(this));
+        return Address.getAddress(_bytecode, address(this));
     }
 
     function _deploy(bytes memory bytecode, Token _projectToken) internal {
@@ -71,8 +71,11 @@ contract StakingFactory is FactoryStorage, Ownable {
         bytes memory byteCode = getBytecode(_projectToken, _name);
         _deploy(byteCode, _projectToken);
         address stakePoolAddress = getAddress(byteCode);
+
         poolsData[stakePoolAddress] = Pool(address(_projectToken), _name);
         stakingAddresses.push(stakePoolAddress);
+
+        GrayblockStaking(stakePoolAddress).transferOwnership(owner());
         emit NewPool(stakePoolAddress);
     }
 
@@ -90,5 +93,9 @@ contract StakingFactory is FactoryStorage, Ownable {
     function _setFeeCollector(address _newFeeCollector) external onlyOwner {
         feeCollector = _newFeeCollector;
         emit FeeCollector(_newFeeCollector);
+    }
+
+    function getPools() public view override returns (address[] memory) {
+        return stakingAddresses;
     }
 }

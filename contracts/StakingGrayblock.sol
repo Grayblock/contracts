@@ -8,10 +8,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./lib/IterableMapping.sol";
 
-/**
- * @notice GrayBlock Staking Contract
- * @author Adam Lee
- */
 contract GrayblockStaking is ReentrancyGuard, Ownable {
     using SafeMath for uint256;
     using IterableMapping for IterableMapping.Map;
@@ -25,9 +21,8 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
 
     event UnStaked(address staker, uint256 amount);
 
-    event ClaimReward(address staker, uint256 amount);
-
     event AllocationUpdated();
+    event ClaimReward(address _staker, uint256 _amount);
 
     string public name;
 
@@ -50,7 +45,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     uint256 public lockTime = 1 days;
 
     /// @dev Iterable Mapping for staking information
-    IterableMapping.Map stakeInfos;
+    IterableMapping.Map private stakeInfos;
 
     /// @notice Total staked project token balance
     uint256 public totalStakedBalance;

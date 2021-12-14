@@ -2,7 +2,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract FactoryStorage {
+abstract contract Factory {
     IERC20 public tradeToken;
 
     struct Pool {
@@ -12,4 +12,6 @@ contract FactoryStorage {
 
     mapping(address => Pool) public poolsData;
     event NewPool(address addr);
+
+    function getPools() public view virtual returns (address[] memory);
 }

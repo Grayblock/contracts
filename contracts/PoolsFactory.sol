@@ -4,20 +4,18 @@ import "./Token.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Pools.sol";
-import "./FactoryStorage.sol";
-import "./lib/Factory.sol";
+import "./Factory.sol";
+import "./lib/Address.sol";
 
-contract PoolsFactory is FactoryStorage, Ownable {
+contract PoolsFactory is Factory, Ownable {
     address[] public poolsAddresses;
-    address private admin;
 
     uint256 constant SALT = 0xff;
 
     event Deployed(address addr, uint256 salt);
 
-    constructor(IERC20 _tradeToken, address _admin) {
+    constructor(IERC20 _tradeToken) {
         tradeToken = _tradeToken;
-        admin = _admin;
     }
 
     function getTokenBytecode(string memory _name, string memory _symbol)
@@ -26,7 +24,7 @@ contract PoolsFactory is FactoryStorage, Ownable {
         returns (bytes memory)
     {
         bytes memory creationCode = type(Token).creationCode;
-        return Factory.getByteCode(abi.encode(_name, _symbol), creationCode);
+        return Address.getByteCode(abi.encode(_name, _symbol), creationCode);
     }
 
     function getPoolsBytecode(Token _projectToken)
@@ -36,14 +34,14 @@ contract PoolsFactory is FactoryStorage, Ownable {
     {
         bytes memory creationCode = type(Pools).creationCode;
         return
-            Factory.getByteCode(
+            Address.getByteCode(
                 abi.encode(_projectToken, tradeToken),
                 creationCode
             );
     }
 
     function getAddress(bytes memory _bytecode) public view returns (address) {
-        return Factory.getAddress(_bytecode, address(this));
+        return Address.getAddress(_bytecode, address(this));
     }
 
     function _deploy(bytes memory bytecode) internal {
@@ -80,7 +78,7 @@ contract PoolsFactory is FactoryStorage, Ownable {
         emit NewPool(poolsAddress);
     }
 
-    function getPools() public view returns (address[] memory) {
+    function getPools() public view override returns (address[] memory) {
         return poolsAddresses;
     }
 
@@ -98,6 +96,6 @@ contract PoolsFactory is FactoryStorage, Ownable {
 
         Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
 
-        Pools(_pool).transferOwnership(admin);
+        Pools(_pool).transferOwnership(owner());
     }
 }
