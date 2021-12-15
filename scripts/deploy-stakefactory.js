@@ -14,18 +14,8 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const IterableMapping = await hre.ethers.getContractFactory(
-    "IterableMapping"
-  );
-  const iterableMapping = await IterableMapping.deploy();
-  await iterableMapping.deployed();
-  console.log("Lib IterableMapping deployed to:", iterableMapping.address);
 
-  const StakeFactory = await hre.ethers.getContractFactory("StakingFactory", {
-    libraries: {
-      IterableMapping: iterableMapping.address,
-    },
-  });
+  const StakeFactory = await hre.ethers.getContractFactory("StakingFactory");
 
   const stakeFactory = await StakeFactory.deploy(
     process.env.FEE_COLLECTOR,

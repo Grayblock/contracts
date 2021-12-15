@@ -99,3 +99,5 @@ contract StakingFactory is Factory, Ownable {
         return stakingAddresses;
     }
 }
+
+// 528f029f869c58605c49122c20535d195b2eb97b75017f7b6e810503b0caf9ae
