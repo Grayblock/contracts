@@ -165,18 +165,17 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
 
         if (stakeInfos.size() == 0) {
             accumulatedPoolReward.add(_amount);
-            return;
-        }
-
-        uint256 rewardAmount = _amount.add(accumulatedPoolReward);
-        for (uint256 i = 0; i < stakeInfos.size(); i++) {
-            address key = stakeInfos.getKeyAtIndex(i);
-            IterableMapping.StakeInfo storage stakeInfo = stakeInfos.values[
-                key
-            ];
-            stakeInfo.rewardAmount = stakeInfo.rewardAmount.add(
-                rewardAmount.mul(stakeInfo.amount).div(totalStakedBalance)
-            );
+        } else {
+            uint256 rewardAmount = _amount.add(accumulatedPoolReward);
+            for (uint256 i = 0; i < stakeInfos.size(); i++) {
+                address key = stakeInfos.getKeyAtIndex(i);
+                IterableMapping.StakeInfo storage stakeInfo = stakeInfos.values[
+                    key
+                ];
+                stakeInfo.rewardAmount = stakeInfo.rewardAmount.add(
+                    rewardAmount.mul(stakeInfo.amount).div(totalStakedBalance)
+                );
+            }
         }
 
         emit AllocationUpdated(_amount, accumulatedPoolReward);
