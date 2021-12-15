@@ -39,7 +39,11 @@ contract Pools is Ownable {
     }
 
     mapping(address => Investor) public Investors;
+    mapping(bytes32 => bytes) private dataStore;
     bool public newPool;
+
+    bytes32 private constant BACKGROUND_IMAGE_URL =
+        0x123454c74b0c1a91e08303d2e10c9eb01319b4900505a71e532a0aee29c19a09; // keccak256("BACKGROUND_IMAGE_URL")
 
     constructor(address _projectToken, address _tradeToken) {
         projectToken = Token(_projectToken);
