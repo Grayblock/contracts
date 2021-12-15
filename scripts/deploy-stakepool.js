@@ -14,19 +14,15 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const IterableMapping = await hre.ethers.getContractFactory(
-    "IterableMapping"
-  );
-  const iterableMapping = await IterableMapping.deploy();
-  await iterableMapping.deployed();
-  console.log("Lib IterableMapping deployed to:", iterableMapping.address);
+  // const IterableMapping = await hre.ethers.getContractFactory(
+  //   "IterableMapping"
+  // );
+  // const iterableMapping = await IterableMapping.deploy();
+  // await iterableMapping.deployed();
+  // console.log("Lib IterableMapping deployed to:", iterableMapping.address);
 
   console.log("Deploying stake pool contract...");
-  const Pools = await hre.ethers.getContractFactory("GrayblockStaking", {
-    libraries: {
-      IterableMapping: iterableMapping.address,
-    },
-  });
+  const Pools = await hre.ethers.getContractFactory("GrayblockStaking");
 
   const pools = await Pools.deploy(
     process.env.TRADE_TOKEN,

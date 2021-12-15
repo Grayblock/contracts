@@ -15,7 +15,7 @@ library IterableMapping {
     }
 
     function get(Map storage map, address key)
-        public
+        internal
         view
         returns (StakeInfo memory)
     {
@@ -23,7 +23,7 @@ library IterableMapping {
     }
 
     function getIndexOfKey(Map storage map, address key)
-        public
+        internal
         view
         returns (int256)
     {
@@ -34,14 +34,14 @@ library IterableMapping {
     }
 
     function getKeyAtIndex(Map storage map, uint256 index)
-        public
+        internal
         view
         returns (address)
     {
         return map.keys[index];
     }
 
-    function size(Map storage map) public view returns (uint256) {
+    function size(Map storage map) internal view returns (uint256) {
         return map.keys.length;
     }
 
@@ -49,7 +49,7 @@ library IterableMapping {
         Map storage map,
         address key,
         StakeInfo memory val
-    ) public {
+    ) internal {
         if (map.inserted[key]) {
             map.values[key] = val;
         } else {
@@ -60,7 +60,7 @@ library IterableMapping {
         }
     }
 
-    function remove(Map storage map, address key) public {
+    function remove(Map storage map, address key) internal {
         if (!map.inserted[key]) {
             return;
         }

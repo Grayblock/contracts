@@ -12,16 +12,13 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     using SafeMath for uint256;
     using IterableMapping for IterableMapping.Map;
 
-    /// @notice Event emitted only on construction. To be used by indexers
-    event GrayblockStakingContractDeployed();
-
     event TradedTokenPut(address engeryDeveloper, uint256 amount);
 
     event Staked(address staker, uint256 amount);
 
     event UnStaked(address staker, uint256 amount);
 
-    event AllocationUpdated();
+    event AllocationUpdated(uint256 allocationAmount, uint256 accumulated);
     event ClaimReward(address _staker, uint256 _amount);
 
     string public name;
@@ -50,6 +47,8 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /// @notice Total staked project token balance
     uint256 public totalStakedBalance;
 
+    uint256 private accumulatedPoolReward;
+
     /**
      * @notice Constructor
      * @param _tradedToken Traded Token Instance
@@ -69,8 +68,6 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         factory = _factory;
         feeBps = 100;
         name = _name;
-
-        emit GrayblockStakingContractDeployed();
     }
 
     /**
@@ -161,11 +158,17 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Our Backend calls this function every 6hrs to calcuate the reward for every user
      */
-    function updateAllocation(uint256 rewardAmount) external onlyOwner {
+    function updateAllocation(uint256 _amount) external onlyOwner {
         uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
 
-        require(tradedTokenBalance >= rewardAmount, "not enough reward");
+        require(tradedTokenBalance >= _amount, "not enough reward");
 
+        if (stakeInfos.size() == 0) {
+            accumulatedPoolReward.add(_amount);
+            return;
+        }
+
+        uint256 rewardAmount = _amount.add(accumulatedPoolReward);
         for (uint256 i = 0; i < stakeInfos.size(); i++) {
             address key = stakeInfos.getKeyAtIndex(i);
             IterableMapping.StakeInfo storage stakeInfo = stakeInfos.values[
@@ -176,7 +179,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             );
         }
 
-        emit AllocationUpdated();
+        emit AllocationUpdated(_amount, accumulatedPoolReward);
     }
 
     /**
