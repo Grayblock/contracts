@@ -27,7 +27,7 @@ contract PoolsFactory is Factory, Ownable {
         return Address.getByteCode(abi.encode(_name, _symbol), creationCode);
     }
 
-    function getPoolsBytecode(Token _projectToken)
+    function getPoolsBytecode(Token _projectToken, string memory _name)
         public
         view
         returns (bytes memory)
@@ -35,7 +35,7 @@ contract PoolsFactory is Factory, Ownable {
         bytes memory creationCode = type(Pools).creationCode;
         return
             Address.getByteCode(
-                abi.encode(_projectToken, tradeToken),
+                abi.encode(_projectToken, tradeToken, _name),
                 creationCode
             );
     }
@@ -68,7 +68,8 @@ contract PoolsFactory is Factory, Ownable {
         _deploy(projectTokenByteCode);
 
         bytes memory poolsByteCode = getPoolsBytecode(
-            Token(projectTokenAddress)
+            Token(projectTokenAddress),
+            _poolName
         );
         address poolsAddress = getAddress(poolsByteCode);
         _deploy(poolsByteCode);
