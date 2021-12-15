@@ -39,7 +39,6 @@ contract Pools is Ownable {
     }
 
     mapping(address => Investor) public Investors;
-    mapping(bytes32 => bytes) private dataStore;
 
     bool public newPool;
     string public name;
