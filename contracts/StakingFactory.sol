@@ -70,13 +70,13 @@ contract StakingFactory is Factory, Ownable {
     {
         bytes memory byteCode = getBytecode(_projectToken, _name);
         _deploy(byteCode, _projectToken);
+
         address stakePoolAddress = getAddress(byteCode);
 
         poolsData[stakePoolAddress] = Pool(address(_projectToken), _name);
         stakingAddresses.push(stakePoolAddress);
 
         GrayblockStaking(stakePoolAddress).transferOwnership(owner());
-        emit NewPool(stakePoolAddress);
     }
 
     function harvestAll(address _staker) external {

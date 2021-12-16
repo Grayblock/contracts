@@ -11,8 +11,17 @@ contract PoolsFactory is Factory, Ownable {
     address[] public poolsAddresses;
 
     uint256 constant SALT = 0xff;
+    struct PoolData {
+        string poolName;
+        string projectTokenName;
+        string projectTokenSymbol;
+        uint256 totalTokenAmount;
+        uint256 startingTime;
+        uint256 goal;
+        uint256 cap;
+    }
 
-    event Deployed(address addr, uint256 salt);
+    event PoolDeployed(address _pool);
 
     constructor(IERC20 _tradeToken) {
         tradeToken = _tradeToken;
@@ -54,42 +63,50 @@ contract PoolsFactory is Factory, Ownable {
                 revert(0, 0)
             }
         }
-
-        emit Deployed(addr, SALT);
     }
 
-    function deployPool(
-        string memory _poolName,
-        string memory _name,
-        string memory _symbol
-    ) external onlyOwner {
-        bytes memory projectTokenByteCode = getTokenBytecode(_name, _symbol);
+    function deployAndCreatePool(PoolData calldata _poolData)
+        external
+        onlyOwner
+    {
+        bytes memory projectTokenByteCode = getTokenBytecode(
+            _poolData.projectTokenName,
+            _poolData.projectTokenSymbol
+        );
         address projectTokenAddress = getAddress(projectTokenByteCode);
         _deploy(projectTokenByteCode);
 
         bytes memory poolsByteCode = getPoolsBytecode(
             Token(projectTokenAddress),
-            _poolName
+            _poolData.poolName
         );
         address poolsAddress = getAddress(poolsByteCode);
         _deploy(poolsByteCode);
+        emit PoolDeployed(poolsAddress);
 
         poolsAddresses.push(poolsAddress);
-        poolsData[poolsAddress] = Pool(projectTokenAddress, _poolName);
-        emit NewPool(poolsAddress);
+        poolsData[poolsAddress] = Pool(projectTokenAddress, _poolData.poolName);
+
+        _createPoolAndTransferOwnerships(
+            poolsAddress,
+            _poolData.totalTokenAmount,
+            _poolData.startingTime,
+            _poolData.goal,
+            _poolData.cap
+        );
     }
 
     function getPools() public view override returns (address[] memory) {
         return poolsAddresses;
     }
 
-    function createPoolAndTransferOwnerships(
+    function _createPoolAndTransferOwnerships(
         address _pool,
         uint256 _totalTokenAmount,
         uint256 _startingTime,
         uint256 _goal,
         uint256 _cap
-    ) external onlyOwner {
+    ) internal {
         address projectToken = poolsData[_pool].projectToken;
         require(projectToken != address(0), "PoolsFactory: Invalid pool");
 
