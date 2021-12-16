@@ -28,9 +28,9 @@ module.exports = {
       // }
     },
     testnet: {
-      url: process.env.FUJI_RPC_URL,
+      url: process.env.RPC_URL,
       accounts: [`0x${process.env.PK}`],
-      chainId: 43113,
+      chainId: process.env.CHAIN_ID,
       gas: "auto",
     },
   },
