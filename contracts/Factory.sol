@@ -11,7 +11,6 @@ abstract contract Factory {
     }
 
     mapping(address => Pool) public poolsData;
-    event NewPool(address addr);
 
     function getPools() public view virtual returns (address[] memory);
 }

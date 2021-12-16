@@ -18,6 +18,13 @@ contract Pools is Ownable {
         address indexed _account,
         address indexed _projectToken
     );
+    event NewPool(
+        uint256 totalTokenAmount,
+        uint256 startingTime,
+        uint256 goal,
+        uint256 cap,
+        bool newPool
+    );
 
     uint256 public Goal;
     uint256 public Cap;
@@ -39,12 +46,19 @@ contract Pools is Ownable {
     }
 
     mapping(address => Investor) public Investors;
-    bool public newPool;
 
-    constructor(address _projectToken, address _tradeToken) {
+    bool public newPool;
+    string public name;
+
+    constructor(
+        address _projectToken,
+        address _tradeToken,
+        string memory _name
+    ) {
         projectToken = Token(_projectToken);
         tradeToken = ERC20(_tradeToken);
         newPool = true;
+        name = _name;
     }
 
     modifier TestAllownce(
@@ -106,6 +120,7 @@ contract Pools is Ownable {
 
         PoolStartTime = _StartingTime;
         PoolEndTime = _StartingTime + (86400 * 7);
+        bool update = newPool == true ? true : false;
 
         if (newPool) {
             Goal = _goal;
@@ -122,6 +137,8 @@ contract Pools is Ownable {
             );
             LeftTokens = SafeMath.add(LeftTokens, _TotalTokenAmount);
         }
+
+        emit NewPool(_TotalTokenAmount, _StartingTime, _goal, _cap, update);
     }
 
     function Invest(uint256 _amount) external {
