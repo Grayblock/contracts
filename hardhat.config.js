@@ -28,9 +28,9 @@ module.exports = {
       // }
     },
     testnet: {
-      url: process.env.FUJI_RPC_URL,
+      url: process.env.RPC_URL,
       accounts: [`0x${process.env.PK}`],
-      chainId: 43113,
+      chainId: parseInt(process.env.CHAIN_ID),
       gas: "auto",
     },
   },
@@ -41,7 +41,7 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 1000,
           },
         },
       },
@@ -50,7 +50,7 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 1000,
           },
         },
       },
@@ -59,7 +59,7 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 1000,
           },
         },
       },
