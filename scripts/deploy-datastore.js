@@ -16,6 +16,7 @@ async function main() {
 
   const PoolsDataStore = await hre.ethers.getContractFactory("PoolsDataStore");
 
+  console.log("Deploying data store contract...")
   const poolsDataStore = await PoolsDataStore.deploy();
   await poolsDataStore.deployed();
   console.log("PoolsDataStore deployed to:", poolsDataStore.address);

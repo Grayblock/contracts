@@ -113,10 +113,13 @@ contract Pools is Ownable {
             _goal <= _TotalTokenAmount,
             "Goal cannot be more than TotalTokenAmount"
         );
-        require(_cap <= _goal, "Cap per user cannot be more than goal");
+
         require(projectToken.owner() == address(this), "Pools: not owner");
 
-        // TransferInToken(address(projectToken), msg.sender, _TotalTokenAmount);
+        require(
+            SafeMath.add(Cap, _cap) <= SafeMath.add(Goal, _goal),
+            "Cap per user cannot be more than goal"
+        );
 
         PoolStartTime = _StartingTime;
         PoolEndTime = _StartingTime + (86400 * 7);
@@ -251,6 +254,11 @@ contract Pools is Ownable {
     }
 
     function updateCapPerUser(uint256 _cap) public onlyOwner {
+        require(
+            SafeMath.add(Cap, _cap) <= Goal,
+            "Cap per user cannot be more than goal"
+        );
+
         Cap = _cap;
     }
 
