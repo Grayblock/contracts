@@ -13,6 +13,8 @@ contract Pools is Ownable {
 
     event TransferOut(uint256 _amount, address To, address _token);
     event TransferIn(uint256 _amount, address From, address _token);
+    event ExecutorChanged(address oldExecutor, address newExecutor);
+
     event GoalReached(
         uint256 indexed _goal,
         address indexed _account,
@@ -40,7 +42,7 @@ contract Pools is Ownable {
 
     struct Investor {
         uint256 Investment; //the amount of the main coin invested, calc with rate
-        uint256 TokensOwn; //the amount of Tokens the investor needto get from the contract
+        uint256 TokensOwn; //the amount of Tokens the investor need to get from the contract
         uint256 InvestTime; //the time that investment made
         uint256 TokensClaimed;
     }
@@ -49,6 +51,8 @@ contract Pools is Ownable {
 
     bool public newPool;
     string public name;
+
+    address private executor;
 
     constructor(
         address _projectToken,
@@ -76,6 +80,11 @@ contract Pools is Ownable {
     modifier investorOnly() {
         require(Investors[msg.sender].Investment > 0, "Not an investor");
         _;
+    }
+
+    modifier isAuthorized() {
+      require(msg.sender == owner() || msg.sender == executor, "Pools: unauthorized");
+      _;
     }
 
     function CheckBalance(address _Token, address _Subject)
@@ -108,7 +117,7 @@ contract Pools is Ownable {
         uint256 _StartingTime, //Until what time the pool will work
         uint256 _goal,
         uint256 _cap
-    ) external onlyOwner {
+    ) external isAuthorized {
         require(
             _goal <= _TotalTokenAmount,
             "Goal cannot be more than TotalTokenAmount"
@@ -145,20 +154,20 @@ contract Pools is Ownable {
     }
 
     function Invest(uint256 _amount) external {
-        require(block.timestamp >= PoolStartTime, "Not yet opened");
-        require(block.timestamp < PoolEndTime, "Closed");
+        require(block.timestamp >= PoolStartTime, "Pools: Not yet opened");
+        require(block.timestamp < PoolEndTime, "Pools: Closed");
         require(
             SafeMath.add(TotalCollectedWei, _amount) <= Goal,
-            "Goal reached"
+            "Pools: goal exceeded"
         );
         require(
             tradeToken.balanceOf(msg.sender) >= _amount && _amount != 0,
-            "Insufficient trade token"
+            "Pools: Insufficient trade token"
         );
         if (Cap != 0) {
             require(
                 SafeMath.add(Investors[msg.sender].Investment, _amount) <= Cap,
-                "Cap exceeded"
+                "Pools: Cap exceeded"
             );
         }
 
@@ -192,7 +201,7 @@ contract Pools is Ownable {
         Investors[msg.sender].TokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
         Investors[msg.sender].TokensClaimed = tokens;
 
-        projectToken.mint(msg.sender, tokens);
+        mintProjectTokens(msg.sender, tokens);
 
         emit TransferOut(tokens, msg.sender, address(projectToken));
         RegisterClaim(tokens);
@@ -249,11 +258,11 @@ contract Pools is Ownable {
         return result;
     }
 
-    function updatePoolEndTime(uint256 _poolEndTime) public onlyOwner {
+    function updatePoolEndTime(uint256 _poolEndTime) public isAuthorized {
         PoolEndTime = _poolEndTime;
     }
 
-    function updateCapPerUser(uint256 _cap) public onlyOwner {
+    function updateCapPerUser(uint256 _cap) public isAuthorized {
         require(
             SafeMath.add(Cap, _cap) <= Goal,
             "Cap per user cannot be more than goal"
@@ -262,14 +271,20 @@ contract Pools is Ownable {
         Cap = _cap;
     }
 
+    function _setExecutor(address _newExecutor) external onlyOwner {
+        address oldExecutor = executor;
+        executor = _newExecutor;
+        emit ExecutorChanged(oldExecutor, _newExecutor);
+    }
+
     function mintProjectTokens(address _account, uint256 _amount)
         public
-        onlyOwner
+        isAuthorized
     {
         projectToken.mint(_account, _amount);
     }
 
-    function withdrawTradeTokens() public onlyOwner {
+    function withdrawTradeTokens() external onlyOwner {
         require(hasPoolEnded(), "Pool has not ended yet");
         uint256 balance = tradeToken.balanceOf(address(this));
         require(balance >= 0, "Balance of pool is zero");
@@ -282,7 +297,7 @@ contract Pools is Ownable {
     }
 
     function hasGoalReached() public view returns (bool) {
-        if (tradeToken.balanceOf(address(this)) >= Goal) return true;
+        if (TotalCollectedWei >= Goal) return true;
         else return false;
     }
 

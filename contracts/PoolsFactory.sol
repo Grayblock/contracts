@@ -19,6 +19,7 @@ contract PoolsFactory is Factory, Ownable {
         uint256 startingTime;
         uint256 goal;
         uint256 cap;
+        address _executor;
     }
 
     event PoolDeployed(address _pool);
@@ -92,7 +93,8 @@ contract PoolsFactory is Factory, Ownable {
             _poolData.totalTokenAmount,
             _poolData.startingTime,
             _poolData.goal,
-            _poolData.cap
+            _poolData.cap,
+            _poolData._executor
         );
     }
 
@@ -105,7 +107,8 @@ contract PoolsFactory is Factory, Ownable {
         uint256 _totalTokenAmount,
         uint256 _startingTime,
         uint256 _goal,
-        uint256 _cap
+        uint256 _cap,
+        address _executor
     ) internal {
         address projectToken = poolsData[_pool].projectToken;
         require(projectToken != address(0), "PoolsFactory: Invalid pool");
@@ -114,6 +117,7 @@ contract PoolsFactory is Factory, Ownable {
 
         Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
 
+        Pools(_pool)._setExecutor(_executor);
         Pools(_pool).transferOwnership(owner());
     }
 }
