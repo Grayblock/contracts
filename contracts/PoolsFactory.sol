@@ -1,8 +1,9 @@
 pragma solidity ^0.8.0;
 
-import "./Token.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "./Token.sol";
 import "./Pools.sol";
 import "./Factory.sol";
 import "./lib/Address.sol";
@@ -11,6 +12,7 @@ contract PoolsFactory is Factory, Ownable {
     address[] public poolsAddresses;
 
     uint256 constant SALT = 0xff;
+
     struct PoolData {
         string poolName;
         string projectTokenName;
@@ -19,7 +21,7 @@ contract PoolsFactory is Factory, Ownable {
         uint256 startingTime;
         uint256 goal;
         uint256 cap;
-        address _executor;
+        address executor;
     }
 
     event PoolDeployed(address _pool);
@@ -94,7 +96,7 @@ contract PoolsFactory is Factory, Ownable {
             _poolData.startingTime,
             _poolData.goal,
             _poolData.cap,
-            _poolData._executor
+            _poolData.executor
         );
     }
 

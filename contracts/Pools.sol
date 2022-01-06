@@ -5,9 +5,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
 import "./Token.sol";
 
 contract Pools is Ownable {
+
     event FinishPool();
     event PoolUpdate();
 
@@ -52,7 +54,7 @@ contract Pools is Ownable {
     bool public newPool;
     string public name;
 
-    address private executor;
+    address public executor;
 
     constructor(
         address _projectToken,
@@ -83,8 +85,11 @@ contract Pools is Ownable {
     }
 
     modifier isAuthorized() {
-      require(msg.sender == owner() || msg.sender == executor, "Pools: unauthorized");
-      _;
+        require(
+            msg.sender == owner() || msg.sender == executor,
+            "Pools: unauthorized"
+        );
+        _;
     }
 
     function CheckBalance(address _Token, address _Subject)
@@ -271,12 +276,6 @@ contract Pools is Ownable {
         Cap = _cap;
     }
 
-    function _setExecutor(address _newExecutor) external onlyOwner {
-        address oldExecutor = executor;
-        executor = _newExecutor;
-        emit ExecutorChanged(oldExecutor, _newExecutor);
-    }
-
     function mintProjectTokens(address _account, uint256 _amount)
         public
         isAuthorized
@@ -305,5 +304,11 @@ contract Pools is Ownable {
         if (hasGoalReached()) {
             emit GoalReached(Goal, msg.sender, address(projectToken));
         }
+    }
+
+    function _setExecutor(address _newExecutor) onlyOwner external {
+        address oldExecutor = executor;
+        executor = _newExecutor;
+        emit ExecutorChanged(oldExecutor, _newExecutor);
     }
 }
