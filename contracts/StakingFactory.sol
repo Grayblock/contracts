@@ -90,6 +90,19 @@ contract StakingFactory is Factory, Ownable {
         emit HarvestAll(_staker);
     }
 
+    function updateAllocations(
+        address[] memory _pools,
+        uint256[] memory _allocations
+    ) external onlyOwner {
+        require(
+            _pools.length == _allocations.length,
+            "StakingFactory: array length mismatch"
+        );
+        for (uint256 i = 0; i < _pools.length; i++) {
+            GrayblockStaking(_pools[i]).updateAllocation(_allocations[i]);
+        }
+    }
+
     function _setFeeCollector(address _newFeeCollector) external onlyOwner {
         feeCollector = _newFeeCollector;
         emit FeeCollector(_newFeeCollector);
@@ -99,5 +112,3 @@ contract StakingFactory is Factory, Ownable {
         return stakingAddresses;
     }
 }
-
-// 528f029f869c58605c49122c20535d195b2eb97b75017f7b6e810503b0caf9ae
