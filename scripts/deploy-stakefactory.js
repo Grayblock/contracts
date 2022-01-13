@@ -18,8 +18,9 @@ async function main() {
   const StakeFactory = await hre.ethers.getContractFactory("StakingFactory");
 
   const stakeFactory = await StakeFactory.deploy(
-    process.env.FEE_COLLECTOR,
-    process.env.TRADE_TOKEN
+    process.env.GNOSIS_ADMIN,
+    process.env.TRADE_TOKEN,
+    process.env.GNOSIS_ADMIN
   );
   await stakeFactory.deployed();
   console.log("stakeFactory deployed to:", stakeFactory.address);

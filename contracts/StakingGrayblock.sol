@@ -49,7 +49,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /// @notice Total staked project token balance
     uint256 public totalStakedBalance;
 
-    uint256 private accumulatedPoolReward;
+    uint256 public accumulatedPoolReward;
 
     /**
      * @notice Constructor
@@ -172,7 +172,7 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         );
 
         if (stakeInfos.size() == 0) {
-            accumulatedPoolReward.add(_amount);
+            accumulatedPoolReward = accumulatedPoolReward.add(_amount);
         } else {
             uint256 rewardAmount = _amount.add(accumulatedPoolReward);
             accumulatedPoolReward = 0;

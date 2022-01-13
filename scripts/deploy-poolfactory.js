@@ -16,7 +16,7 @@ async function main() {
 
   const PoolsFactory = await hre.ethers.getContractFactory("PoolsFactory");
   const poolsFactory = await PoolsFactory.deploy(
-    process.env.TRADE_TOKEN);
+    process.env.TRADE_TOKEN, process.env.GNOSIS_ADMIN);
   await poolsFactory.deployed();
   console.log("PoolsFactory deployed to:", poolsFactory.address);
 }

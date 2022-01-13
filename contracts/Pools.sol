@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./Token.sol";
 
 contract Pools is Ownable {
-
     event FinishPool();
     event PoolUpdate();
 
@@ -206,7 +205,7 @@ contract Pools is Ownable {
         Investors[msg.sender].TokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
         Investors[msg.sender].TokensClaimed = tokens;
 
-        mintProjectTokens(msg.sender, tokens);
+        projectToken.mint(msg.sender, tokens);
 
         emit TransferOut(tokens, msg.sender, address(projectToken));
         RegisterClaim(tokens);
@@ -306,7 +305,7 @@ contract Pools is Ownable {
         }
     }
 
-    function _setExecutor(address _newExecutor) onlyOwner external {
+    function _setExecutor(address _newExecutor) external onlyOwner {
         address oldExecutor = executor;
         executor = _newExecutor;
         emit ExecutorChanged(oldExecutor, _newExecutor);

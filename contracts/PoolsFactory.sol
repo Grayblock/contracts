@@ -12,6 +12,7 @@ contract PoolsFactory is Factory, Ownable {
     address[] public poolsAddresses;
 
     uint256 constant SALT = 0xff;
+    address private admin;
 
     struct PoolData {
         string poolName;
@@ -26,8 +27,9 @@ contract PoolsFactory is Factory, Ownable {
 
     event PoolDeployed(address _pool);
 
-    constructor(IERC20 _tradeToken) {
+    constructor(IERC20 _tradeToken, address _admin) {
         tradeToken = _tradeToken;
+        admin = _admin;
     }
 
     function getTokenBytecode(string memory _name, string memory _symbol)
@@ -120,6 +122,6 @@ contract PoolsFactory is Factory, Ownable {
         Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
 
         Pools(_pool)._setExecutor(_executor);
-        Pools(_pool).transferOwnership(owner());
+        Pools(_pool).transferOwnership(admin);
     }
 }
