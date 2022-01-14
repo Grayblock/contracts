@@ -19,16 +19,26 @@ contract Pools is Ownable {
         address indexed _account,
         uint256 indexed _amount
     );
+
     event ClaimProjectTokens(
         uint256 indexed _traunchId,
         address indexed _account,
         uint256 indexed _amount
     );
+
+    event ClaimOldProjectTokens(
+        address indexed _account,
+        uint256 indexed _amount
+    );
+
     event Refund(
         uint256 indexed _traunchId,
         address indexed _account,
         uint256 indexed _amount
     );
+
+    event OldRefunds(address indexed _account, uint256 indexed _amount);
+
     event ExecutorChanged(address oldExecutor, address newExecutor);
 
     event GoalReached(
@@ -140,10 +150,8 @@ contract Pools is Ownable {
         emit NewTraunch(_totalTokenAmount, _startingTime, _goal, _cap);
     }
 
-    function purchaseProjectTokens(uint256 _amount, uint256 _traunchId)
-        external
-    {
-        require(getCurrentTraunch() == _traunchId, "Pools: incorrect traunch");
+    function purchaseProjectTokens(uint256 _amount) external {
+        uint256 _traunchId = getCurrentTraunch();
         Traunch memory traunch = traunches[_traunchId];
 
         require(traunch.active, "Pools: inactive traunch");
@@ -198,6 +206,18 @@ contract Pools is Ownable {
         _goalReached(_traunchId);
     }
 
+    function claimTokens() external {
+        uint256 amount = 0;
+        for (uint256 i = 1; i < getCurrentTraunch(); i++) {
+            uint256 tokens = investors[i][msg.sender].tokensOwn;
+            investors[i][msg.sender].tokensOwn = 0;
+            amount = SafeMath.add(tokens, amount);
+        }
+
+        projectToken.mint(msg.sender, amount);
+        emit ClaimOldProjectTokens(msg.sender, amount);
+    }
+
     function claimTokens(uint256 _traunchId) external {
         require(hasGoalReached(_traunchId), "Pools: goal not reached");
 
@@ -219,6 +239,19 @@ contract Pools is Ownable {
             emit ClaimComplete(_traunchId, msg.sender, tokens);
     }
 
+    function getRefund() external {
+        uint256 amount = 0;
+        for (uint256 i = 1; i < getCurrentTraunch(); i++) {
+            uint256 refundAmount = investors[i][msg.sender].investment;
+            investors[i][msg.sender].investment = 0;
+            investors[i][msg.sender].tokensOwn = 0;
+            amount = SafeMath.add(refundAmount, amount);
+        }
+
+        _getRefund(amount);
+        emit OldRefunds(msg.sender, amount);
+    }
+
     function getRefund(uint256 _traunchId) external {
         require(hasPoolEnded(_traunchId), "Pools: not ended yet");
         require(!hasGoalReached(_traunchId), "Pools: goal reached");
@@ -233,14 +266,18 @@ contract Pools is Ownable {
         investors[_traunchId][msg.sender].investment = 0; // make sure this goes first before transfer to prevent reentrancy
         investors[_traunchId][msg.sender].tokensOwn = 0;
 
+        _getRefund(refundAmount);
+        emit Refund(_traunchId, msg.sender, refundAmount);
+    }
+
+    function _getRefund(uint256 _refundAmount) internal {
         uint256 poolBalance = tradeToken.balanceOf(address(this));
         require(
-            poolBalance > 0 && poolBalance > refundAmount,
+            poolBalance > 0 && poolBalance > _refundAmount,
             "Pools: insufficient trade token"
         );
 
-        tradeToken.transfer(msg.sender, refundAmount);
-        emit Refund(_traunchId, msg.sender, refundAmount);
+        tradeToken.transfer(msg.sender, _refundAmount);
     }
 
     function registerInvestor(
@@ -306,9 +343,10 @@ contract Pools is Ownable {
     }
 
     function withdrawTradeTokens(uint256 _traunchId) external onlyOwner {
-        require(hasPoolEnded(_traunchId), "Pool has not ended yet");
+        require(hasGoalReached(_traunchId), "Pools: cannot withdraw");
         uint256 balance = tradeToken.balanceOf(address(this));
-        require(balance >= 0, "Balance of pool is zero");
+
+        require(balance >= 0, "Pools: balance of pool is zero");
         tradeToken.transfer(msg.sender, balance);
     }
 
