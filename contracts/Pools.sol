@@ -214,6 +214,11 @@ contract Pools is Ownable {
 
             investors[i][msg.sender].tokensOwn = 0;
             amount = SafeMath.add(tokens, amount);
+            
+            tranches[i].totalClaims = SafeMath.add(
+            tranches[i].totalClaims,
+            tokens
+        );
         }
 
         projectToken.mint(msg.sender, amount);
