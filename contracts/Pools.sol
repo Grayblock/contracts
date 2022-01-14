@@ -12,16 +12,16 @@ import "./Token.sol";
 contract Pools is Ownable {
     using Counters for Counters.Counter;
 
-    Counters.Counter private traunchId;
+    Counters.Counter private tranchId;
 
     event ClaimComplete(
-        uint256 indexed _traunchId,
+        uint256 indexed _tranchId,
         address indexed _account,
         uint256 indexed _amount
     );
 
     event ClaimProjectTokens(
-        uint256 indexed _traunchId,
+        uint256 indexed _tranchId,
         address indexed _account,
         uint256 indexed _amount
     );
@@ -32,7 +32,7 @@ contract Pools is Ownable {
     );
 
     event Refund(
-        uint256 indexed _traunchId,
+        uint256 indexed _tranchId,
         address indexed _account,
         uint256 indexed _amount
     );
@@ -42,13 +42,13 @@ contract Pools is Ownable {
     event ExecutorChanged(address oldExecutor, address newExecutor);
 
     event GoalReached(
-        uint256 indexed _traunchId,
+        uint256 indexed _tranchId,
         address indexed _account,
         address indexed _projectToken,
         uint256 _goal
     );
 
-    event NewTraunch(
+    event NewTranch(
         uint256 totalTokenAmount,
         uint256 startingTime,
         uint256 goal,
@@ -65,8 +65,8 @@ contract Pools is Ownable {
         uint256 tokensClaimed;
     }
 
-    struct Traunch {
-        uint256 traunchId;
+    struct Tranch {
+        uint256 tranchId;
         uint256 goal;
         uint256 capacity;
         uint256 startTime;
@@ -80,9 +80,8 @@ contract Pools is Ownable {
     }
 
     mapping(uint256 => mapping(address => Investor)) public investors;
-    mapping(uint256 => Traunch) public traunches;
+    mapping(uint256 => Tranch) public tranches;
 
-    bool public newPool;
     string public name;
 
     address public executor;
@@ -94,7 +93,6 @@ contract Pools is Ownable {
     ) {
         projectToken = Token(_projectToken);
         tradeToken = ERC20(_tradeToken);
-        newPool = true;
         name = _name;
     }
 
@@ -106,17 +104,17 @@ contract Pools is Ownable {
         _;
     }
 
-    function createNewTraunch(
+    function createNewTranch(
         uint256 _totalTokenAmount,
         uint256 _startingTime,
         uint256 _goal,
         uint256 _cap
     ) external onlyOwner {
-        uint256 currentTraunch = getCurrentTraunch();
-        if (currentTraunch != 0) {
+        uint256 currentTranch = getCurrentTranch();
+        if (currentTranch != 0) {
             require(
-                hasGoalReached(currentTraunch) || hasPoolEnded(currentTraunch),
-                "Pools: active traunch"
+                hasGoalReached(currentTranch) || hasPoolEnded(currentTranch),
+                "Pools: active tranch"
             );
         }
 
@@ -129,10 +127,10 @@ contract Pools is Ownable {
 
         require(_cap <= _goal, "Pools: cap per user cannot be more than goal");
 
-        traunchId.increment();
+        tranchId.increment();
 
-        Traunch memory traunch = Traunch(
-            traunchId.current(),
+        Tranch memory tranch = Tranch(
+            tranchId.current(),
             _goal,
             _cap,
             _startingTime,
@@ -145,21 +143,21 @@ contract Pools is Ownable {
             0
         );
 
-        traunches[traunchId.current()] = traunch;
+        tranches[tranchId.current()] = tranch;
 
-        emit NewTraunch(_totalTokenAmount, _startingTime, _goal, _cap);
+        emit NewTranch(_totalTokenAmount, _startingTime, _goal, _cap);
     }
 
     function purchaseProjectTokens(uint256 _amount) external {
-        uint256 _traunchId = getCurrentTraunch();
-        Traunch memory traunch = traunches[_traunchId];
+        uint256 _tranchId = getCurrentTranch();
+        Tranch memory tranch = tranches[_tranchId];
 
-        require(traunch.active, "Pools: inactive traunch");
-        require(block.timestamp >= traunch.startTime, "Pools: Not yet opened");
-        require(block.timestamp < traunch.endTime, "Pools: Closed");
+        require(tranch.active, "Pools: inactive tranch");
+        require(block.timestamp >= tranch.startTime, "Pools: Not yet opened");
+        require(block.timestamp < tranch.endTime, "Pools: Closed");
 
         require(
-            SafeMath.add(traunch.totalCollectedWei, _amount) <= traunch.goal,
+            SafeMath.add(tranch.totalCollectedWei, _amount) <= tranch.goal,
             "Pools: goal exceeded"
         );
 
@@ -168,48 +166,52 @@ contract Pools is Ownable {
             "Pools: Insufficient trade token"
         );
 
-        uint256 traunchCap = traunch.capacity;
-        if (traunchCap != 0) {
+        uint256 tranchCap = tranch.capacity;
+        if (tranchCap != 0) {
             require(
                 SafeMath.add(
-                    investors[_traunchId][msg.sender].investment,
+                    investors[_tranchId][msg.sender].investment,
                     _amount
-                ) <= traunchCap,
+                ) <= tranchCap,
                 "Pools: Cap exceeded"
             );
         }
 
-        if (investors[_traunchId][msg.sender].investment == 0) {
-            registerInvestor(msg.sender, _amount, _traunchId);
+        if (investors[_tranchId][msg.sender].investment == 0) {
+            registerInvestor(msg.sender, _amount, _tranchId);
         } else {
-            investors[_traunchId][msg.sender].investment = SafeMath.add(
-                investors[_traunchId][msg.sender].investment,
+            investors[_tranchId][msg.sender].investment = SafeMath.add(
+                investors[_tranchId][msg.sender].investment,
                 _amount
             );
 
-            investors[_traunchId][msg.sender].tokensOwn = calcTokens(
+            investors[_tranchId][msg.sender].tokensOwn = calcTokens(
                 SafeMath.sub(
-                    investors[_traunchId][msg.sender].investment,
-                    investors[_traunchId][msg.sender].tokensClaimed
+                    investors[_tranchId][msg.sender].investment,
+                    investors[_tranchId][msg.sender].tokensClaimed
                 ),
-                _traunchId
+                _tranchId
             );
         }
 
         tradeToken.transferFrom(msg.sender, address(this), _amount);
 
-        traunches[_traunchId].totalCollectedWei = SafeMath.add(
-            traunches[_traunchId].totalCollectedWei,
+        tranches[_tranchId].totalCollectedWei = SafeMath.add(
+            tranches[_tranchId].totalCollectedWei,
             _amount
         );
 
-        _goalReached(_traunchId);
+        _goalReached(_tranchId);
     }
 
     function claimTokens() external {
         uint256 amount = 0;
-        for (uint256 i = 1; i < getCurrentTraunch(); i++) {
+        for (uint256 i = 1; i < getCurrentTranch(); i++) {
             uint256 tokens = investors[i][msg.sender].tokensOwn;
+            if (tokens == 0) {
+                continue;
+            }
+
             investors[i][msg.sender].tokensOwn = 0;
             amount = SafeMath.add(tokens, amount);
         }
@@ -218,31 +220,35 @@ contract Pools is Ownable {
         emit ClaimOldProjectTokens(msg.sender, amount);
     }
 
-    function claimTokens(uint256 _traunchId) external {
-        require(hasGoalReached(_traunchId), "Pools: goal not reached");
+    function claimTokens(uint256 _tranchId) external {
+        require(hasGoalReached(_tranchId), "Pools: goal not reached");
 
-        uint256 tokens = investors[_traunchId][msg.sender].tokensOwn;
+        uint256 tokens = investors[_tranchId][msg.sender].tokensOwn;
         require(tokens > 0, "Pools: zero tokens to claim");
 
-        investors[_traunchId][msg.sender].tokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
-        investors[_traunchId][msg.sender].tokensClaimed = tokens;
-        traunches[_traunchId].totalClaims = SafeMath.add(
-            traunches[_traunchId].totalClaims,
+        investors[_tranchId][msg.sender].tokensOwn = 0; // make sure this goes first before transfer to prevent reentrancy
+        investors[_tranchId][msg.sender].tokensClaimed = tokens;
+        tranches[_tranchId].totalClaims = SafeMath.add(
+            tranches[_tranchId].totalClaims,
             tokens
         );
 
         projectToken.mint(msg.sender, tokens);
 
-        emit ClaimProjectTokens(_traunchId, msg.sender, tokens);
+        emit ClaimProjectTokens(_tranchId, msg.sender, tokens);
 
-        if (traunches[_traunchId].goal == traunches[_traunchId].totalClaims)
-            emit ClaimComplete(_traunchId, msg.sender, tokens);
+        if (tranches[_tranchId].goal == tranches[_tranchId].totalClaims)
+            emit ClaimComplete(_tranchId, msg.sender, tokens);
     }
 
     function getRefund() external {
         uint256 amount = 0;
-        for (uint256 i = 1; i < getCurrentTraunch(); i++) {
+        for (uint256 i = 1; i < getCurrentTranch(); i++) {
             uint256 refundAmount = investors[i][msg.sender].investment;
+            if (refundAmount == 0) {
+                continue;
+            }
+
             investors[i][msg.sender].investment = 0;
             investors[i][msg.sender].tokensOwn = 0;
             amount = SafeMath.add(refundAmount, amount);
@@ -252,22 +258,22 @@ contract Pools is Ownable {
         emit OldRefunds(msg.sender, amount);
     }
 
-    function getRefund(uint256 _traunchId) external {
-        require(hasPoolEnded(_traunchId), "Pools: not ended yet");
-        require(!hasGoalReached(_traunchId), "Pools: goal reached");
+    function getRefund(uint256 _tranchId) external {
+        require(hasPoolEnded(_tranchId), "Pools: not ended yet");
+        require(!hasGoalReached(_tranchId), "Pools: goal reached");
         require(
-            investors[_traunchId][msg.sender].investment > 0,
+            investors[_tranchId][msg.sender].investment > 0,
             "Pools: zero investment"
         );
 
-        uint256 refundAmount = investors[_traunchId][msg.sender].investment;
+        uint256 refundAmount = investors[_tranchId][msg.sender].investment;
         require(refundAmount > 0, "Pools: zero refunds");
 
-        investors[_traunchId][msg.sender].investment = 0; // make sure this goes first before transfer to prevent reentrancy
-        investors[_traunchId][msg.sender].tokensOwn = 0;
+        investors[_tranchId][msg.sender].investment = 0; // make sure this goes first before transfer to prevent reentrancy
+        investors[_tranchId][msg.sender].tokensOwn = 0;
 
         _getRefund(refundAmount);
-        emit Refund(_traunchId, msg.sender, refundAmount);
+        emit Refund(_tranchId, msg.sender, refundAmount);
     }
 
     function _getRefund(uint256 _refundAmount) internal {
@@ -283,56 +289,56 @@ contract Pools is Ownable {
     function registerInvestor(
         address _sender,
         uint256 _amount,
-        uint256 _traunchId
+        uint256 _tranchId
     ) internal {
-        uint256 tokens = calcTokens(_amount, _traunchId);
+        uint256 tokens = calcTokens(_amount, _tranchId);
 
-        investors[_traunchId][_sender] = Investor(
+        investors[_tranchId][_sender] = Investor(
             _amount,
             tokens,
             block.timestamp,
             0
         );
 
-        traunches[_traunchId].totalInvestors = SafeMath.add(
-            traunches[_traunchId].totalInvestors,
+        tranches[_tranchId].totalInvestors = SafeMath.add(
+            tranches[_tranchId].totalInvestors,
             1
         );
     }
 
-    function calcTokens(uint256 _amount, uint256 _traunchId)
+    function calcTokens(uint256 _amount, uint256 _tranchId)
         internal
         view
         returns (uint256)
     {
         uint256 ratio = SafeMath.div(
-            traunches[_traunchId].totalTokenAmount,
-            traunches[_traunchId].goal
+            tranches[_tranchId].totalTokenAmount,
+            tranches[_tranchId].goal
         );
         uint256 result = SafeMath.mul(_amount, ratio);
 
         return result;
     }
 
-    function updatePoolEndTime(uint256 _poolEndTime, uint256 _traunchId)
+    function updatePoolEndTime(uint256 _poolEndTime, uint256 _tranchId)
         public
         isAuthorized
     {
-        require(!hasGoalReached(_traunchId), "Pools: inactive pool");
-        traunches[_traunchId].endTime = _poolEndTime;
+        require(!hasGoalReached(_tranchId), "Pools: inactive pool");
+        tranches[_tranchId].endTime = _poolEndTime;
     }
 
-    function updateCapPerUser(uint256 _cap, uint256 _traunchId)
+    function updateCapPerUser(uint256 _cap, uint256 _tranchId)
         public
         isAuthorized
     {
         require(
-            SafeMath.add(traunches[_traunchId].capacity, _cap) <=
-                traunches[_traunchId].goal,
+            SafeMath.add(tranches[_tranchId].capacity, _cap) <=
+                tranches[_tranchId].goal,
             "Pools: cap > goal"
         );
 
-        traunches[_traunchId].capacity = _cap;
+        tranches[_tranchId].capacity = _cap;
     }
 
     function mintProjectTokens(address _account, uint256 _amount)
@@ -342,32 +348,32 @@ contract Pools is Ownable {
         projectToken.mint(_account, _amount);
     }
 
-    function withdrawTradeTokens(uint256 _traunchId) external onlyOwner {
-        require(hasGoalReached(_traunchId), "Pools: cannot withdraw");
+    function withdrawTradeTokens(uint256 _tranchId) external onlyOwner {
+        require(hasGoalReached(_tranchId), "Pools: cannot withdraw");
         uint256 balance = tradeToken.balanceOf(address(this));
 
         require(balance >= 0, "Pools: balance of pool is zero");
         tradeToken.transfer(msg.sender, balance);
     }
 
-    function hasPoolEnded(uint256 _traunchId) public view returns (bool) {
-        if (block.timestamp > traunches[_traunchId].endTime) return true;
+    function hasPoolEnded(uint256 _tranchId) public view returns (bool) {
+        if (block.timestamp > tranches[_tranchId].endTime) return true;
         else return false;
     }
 
-    function hasGoalReached(uint256 _traunchId) public view returns (bool) {
-        return traunches[_traunchId].goalReached;
+    function hasGoalReached(uint256 _tranchId) public view returns (bool) {
+        return tranches[_tranchId].goalReached;
     }
 
-    function _goalReached(uint256 _traunchId) internal {
-        if (hasGoalReached(_traunchId)) {
-            traunches[_traunchId].active = false;
-            traunches[_traunchId].goalReached = true;
+    function _goalReached(uint256 _tranchId) internal {
+        if (hasGoalReached(_tranchId)) {
+            tranches[_tranchId].active = false;
+            tranches[_tranchId].goalReached = true;
             emit GoalReached(
-                _traunchId,
+                _tranchId,
                 msg.sender,
                 address(projectToken),
-                traunches[_traunchId].goal
+                tranches[_tranchId].goal
             );
         }
     }
@@ -378,7 +384,7 @@ contract Pools is Ownable {
         emit ExecutorChanged(oldExecutor, _newExecutor);
     }
 
-    function getCurrentTraunch() public view returns (uint256) {
-        return traunchId.current();
+    function getCurrentTranch() public view returns (uint256) {
+        return tranchId.current();
     }
 }

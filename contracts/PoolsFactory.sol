@@ -119,7 +119,7 @@ contract PoolsFactory is Factory, Ownable {
 
         Token(projectToken).transferOwnership(_pool);
 
-        Pools(_pool).createNewTraunch(
+        Pools(_pool).createNewTranch(
             _totalTokenAmount,
             _startingTime,
             _goal,
