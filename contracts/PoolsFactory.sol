@@ -119,7 +119,12 @@ contract PoolsFactory is Factory, Ownable {
 
         Token(projectToken).transferOwnership(_pool);
 
-        Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
+        Pools(_pool).createNewTraunch(
+            _totalTokenAmount,
+            _startingTime,
+            _goal,
+            _cap
+        );
 
         Pools(_pool)._setExecutor(_executor);
         Pools(_pool).transferOwnership(admin);
