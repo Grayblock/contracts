@@ -1,8 +1,9 @@
 pragma solidity ^0.8.0;
 
-import "./Token.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "./Token.sol";
 import "./Pools.sol";
 import "./Factory.sol";
 import "./lib/Address.sol";
@@ -11,6 +12,8 @@ contract PoolsFactory is Factory, Ownable {
     address[] public poolsAddresses;
 
     uint256 constant SALT = 0xff;
+    address private admin;
+
     struct PoolData {
         string poolName;
         string projectTokenName;
@@ -19,12 +22,14 @@ contract PoolsFactory is Factory, Ownable {
         uint256 startingTime;
         uint256 goal;
         uint256 cap;
+        address executor;
     }
 
     event PoolDeployed(address _pool);
 
-    constructor(IERC20 _tradeToken) {
+    constructor(IERC20 _tradeToken, address _admin) {
         tradeToken = _tradeToken;
+        admin = _admin;
     }
 
     function getTokenBytecode(string memory _name, string memory _symbol)
@@ -92,7 +97,8 @@ contract PoolsFactory is Factory, Ownable {
             _poolData.totalTokenAmount,
             _poolData.startingTime,
             _poolData.goal,
-            _poolData.cap
+            _poolData.cap,
+            _poolData.executor
         );
     }
 
@@ -105,15 +111,22 @@ contract PoolsFactory is Factory, Ownable {
         uint256 _totalTokenAmount,
         uint256 _startingTime,
         uint256 _goal,
-        uint256 _cap
+        uint256 _cap,
+        address _executor
     ) internal {
         address projectToken = poolsData[_pool].projectToken;
         require(projectToken != address(0), "PoolsFactory: Invalid pool");
 
         Token(projectToken).transferOwnership(_pool);
 
-        Pools(_pool).CreatePool(_totalTokenAmount, _startingTime, _goal, _cap);
+        Pools(_pool).createNewTranch(
+            _totalTokenAmount,
+            _startingTime,
+            _goal,
+            _cap
+        );
 
-        Pools(_pool).transferOwnership(owner());
+        Pools(_pool)._setExecutor(_executor);
+        Pools(_pool).transferOwnership(admin);
     }
 }

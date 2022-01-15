@@ -20,10 +20,24 @@ contract StakingFactory is Factory, Ownable {
     event FeeCollector(address feeCollector);
 
     uint256 constant SALT = 0xff;
+    address private admin;
 
-    constructor(address _feeCollector, IERC20 _tradeToken) {
+    constructor(
+        address _feeCollector,
+        IERC20 _tradeToken,
+        address _admin
+    ) {
         feeCollector = _feeCollector;
         tradeToken = _tradeToken;
+        admin = _admin;
+    }
+
+    modifier isAuthorized() {
+        require(
+            msg.sender == owner() || msg.sender == admin,
+            "StakingFactory: unauthorized"
+        );
+        _;
     }
 
     function getBytecode(Token _projectToken, string memory _name)
@@ -66,7 +80,7 @@ contract StakingFactory is Factory, Ownable {
 
     function deployStakingPool(Token _projectToken, string memory _name)
         external
-        onlyOwner
+        isAuthorized
     {
         bytes memory byteCode = getBytecode(_projectToken, _name);
         _deploy(byteCode, _projectToken);
@@ -76,7 +90,7 @@ contract StakingFactory is Factory, Ownable {
         poolsData[stakePoolAddress] = Pool(address(_projectToken), _name);
         stakingAddresses.push(stakePoolAddress);
 
-        GrayblockStaking(stakePoolAddress).transferOwnership(owner());
+        GrayblockStaking(stakePoolAddress).transferOwnership(admin);
     }
 
     function harvestAll(address _staker) external {
@@ -90,7 +104,21 @@ contract StakingFactory is Factory, Ownable {
         emit HarvestAll(_staker);
     }
 
-    function _setFeeCollector(address _newFeeCollector) external onlyOwner {
+    function updateAllocations(
+        address[] memory _pools,
+        uint256[] memory _allocations
+    ) external isAuthorized {
+        require(
+            _pools.length == _allocations.length,
+            "StakingFactory: array length mismatch"
+        );
+        for (uint256 i = 0; i < _pools.length; i++) {
+            GrayblockStaking(_pools[i]).updateAllocation(_allocations[i]);
+        }
+    }
+
+    function _setFeeCollector(address _newFeeCollector) external {
+        require(msg.sender == admin, "StakingFactory: unauthorized caller");
         feeCollector = _newFeeCollector;
         emit FeeCollector(_newFeeCollector);
     }
@@ -99,5 +127,3 @@ contract StakingFactory is Factory, Ownable {
         return stakingAddresses;
     }
 }
-
-// 528f029f869c58605c49122c20535d195b2eb97b75017f7b6e810503b0caf9ae

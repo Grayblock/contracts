@@ -41,13 +41,15 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /// @notice Staking tokens should be locked during locktime in staking pool
     uint256 public lockTime = 1 days;
 
+    uint256 public yeildTime = 6 hours;
+
     /// @dev Iterable Mapping for staking information
     IterableMapping.Map private stakeInfos;
 
     /// @notice Total staked project token balance
     uint256 public totalStakedBalance;
 
-    uint256 private accumulatedPoolReward;
+    uint256 public accumulatedPoolReward;
 
     /**
      * @notice Constructor
@@ -98,11 +100,13 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
         uint256 _actualAmount = _amount.mul(uint256(10000).sub(feeBps)).div(
             10000
         );
+
         projectToken.transferFrom(
             msg.sender,
             feeCollector,
             _amount.sub(_actualAmount)
         );
+
         projectToken.transferFrom(msg.sender, address(this), _actualAmount);
 
         if (stakeInfos.inserted[msg.sender]) {
@@ -136,10 +140,13 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
             msg.sender
         ];
 
-        require(stakeInfo.amount >= _amount, "insufficient balance");
+        require(
+            stakeInfo.amount >= _amount,
+            "GrayblockStaking: insufficient balance"
+        );
         require(
             _getNow() >= stakeInfo.stakedTime.add(lockTime),
-            "can not unstake during lock time"
+            "GrayblockStaking: can not unstake during lock time"
         );
 
         if (stakeInfo.amount == _amount) {
@@ -158,15 +165,18 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Our Backend calls this function every 6hrs to calcuate the reward for every user
      */
-    function updateAllocation(uint256 _amount) external onlyOwner {
-        uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
-
-        require(tradedTokenBalance >= _amount, "not enough reward");
+    function updateAllocation(uint256 _amount) external {
+        require(
+            msg.sender == owner() || msg.sender == factory,
+            "GrayblockStaking: caller not authorized"
+        );
 
         if (stakeInfos.size() == 0) {
-            accumulatedPoolReward.add(_amount);
+            accumulatedPoolReward = accumulatedPoolReward.add(_amount);
         } else {
             uint256 rewardAmount = _amount.add(accumulatedPoolReward);
+            accumulatedPoolReward = 0;
+
             for (uint256 i = 0; i < stakeInfos.size(); i++) {
                 address key = stakeInfos.getKeyAtIndex(i);
                 IterableMapping.StakeInfo storage stakeInfo = stakeInfos.values[
@@ -184,13 +194,28 @@ contract GrayblockStaking is ReentrancyGuard, Ownable {
     /**
      * @notice Users can claim reward
      */
-    function claimReward(address _staker) public {
+    function claimReward(address _staker) external {
         require(stakeInfos.inserted[_staker], "GrayblockStaking: not staker");
         require(canClaimReward(_staker), "GrayblockStaking: no reward");
 
+        uint256 stakeTime = stakeInfos.values[_staker].stakedTime;
+        require(
+            block.timestamp.sub(stakeTime) >= yeildTime,
+            "GrayblockStaking: try later"
+        );
+
         uint256 rewardAmount = stakeInfos.values[_staker].rewardAmount;
+        uint256 tradedTokenBalance = tradedToken.balanceOf(address(this));
+        require(
+            tradedTokenBalance >= rewardAmount,
+            "GrayblockStaking: not enough reward"
+        );
+
         stakeInfos.values[_staker].rewardAmount = 0;
         tradedToken.transfer(_staker, rewardAmount);
+
+        stakeInfos.values[_staker].stakedTime = _getNow();
+
         emit ClaimReward(_staker, rewardAmount);
     }
 
